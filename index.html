@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>90-Day Leadership Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0D0F14;
+  --bg2: #13161D;
+  --bg3: #1A1E27;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --gold: #E6A817;
+  --gold-dim: rgba(230,168,23,0.12);
+  --gold-dim2: rgba(230,168,23,0.2);
+  --tl: #3B9EFF;
+  --tl-dim: rgba(59,158,255,0.12);
+  --ag: #2ED8A3;
+  --ag-dim: rgba(46,216,163,0.12);
+  --hr: #A78BFA;
+  --hr-dim: rgba(167,139,250,0.12);
+  --done: #2ED8A3;
+  --text: #E8EAF0;
+  --text2: #8891A8;
+  --text3: #555E73;
+  --radius: 14px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Cairo', sans-serif;
+  min-height: 100vh;
+}
+.noise {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  opacity: 0.4;
+}
+.app { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+/* HEADER */
+.header {
+  display: flex; align-items: center; gap: 1.25rem; margin-bottom: 2rem;
+  background: var(--bg2); border: 0.5px solid var(--border2); border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+}
+.header-icon {
+  width: 54px; height: 54px; border-radius: 50%;
+  background: var(--gold-dim); border: 1px solid rgba(230,168,23,0.3);
+  display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0;
+}
+.header h1 { font-size: 20px; font-weight: 700; color: var(--text); }
+.header p { font-size: 13px; color: var(--text2); margin-top: 2px; }
+.header-date { margin-right: auto; text-align: left; }
+.header-date .d-label { font-size: 10px; color: var(--text3); }
+.header-date .d-val { font-size: 13px; font-weight: 600; color: var(--gold); }
+
+/* STATS */
+.stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; margin-bottom: 1.5rem; }
+.stat {
+  background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: .9rem .75rem; text-align: center;
+}
+.stat-n { font-size: 26px; font-weight: 700; color: var(--text); }
+.stat-l { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.stat.gold .stat-n { color: var(--gold); }
+.stat.tl .stat-n { color: var(--tl); }
+.stat.ag .stat-n { color: var(--ag); }
+.stat.hr .stat-n { color: var(--hr); }
+
+/* PROGRESS */
+.prog-wrap {
+  background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius-sm);
+  padding: .9rem 1rem; margin-bottom: 1.5rem;
+}
+.prog-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+.prog-top span { font-size: 12px; color: var(--text2); }
+.prog-top strong { font-size: 13px; color: var(--gold); }
+.bar-outer { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.bar-inner { height: 100%; background: linear-gradient(90deg, var(--gold), #F5C842); border-radius: 3px; transition: width .6s ease; }
+
+/* TABS */
+.tabs { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
+.tab {
+  padding: 8px 20px; border-radius: 20px; border: 0.5px solid var(--border2);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  background: var(--bg2); color: var(--text2);
+  font-family: 'Cairo', sans-serif; transition: all .2s;
+}
+.tab:hover { border-color: var(--border2); color: var(--text); }
+.tab.active-tl { background: var(--tl-dim); border-color: var(--tl); color: var(--tl); }
+.tab.active-ag { background: var(--ag-dim); border-color: var(--ag); color: var(--ag); }
+.tab.active-hr { background: var(--hr-dim); border-color: var(--hr); color: var(--hr); }
+
+/* SEARCH */
+.search-wrap { margin-bottom: 1.25rem; }
+.search-wrap input {
+  width: 100%; padding: 10px 16px; border-radius: var(--radius-sm);
+  border: 0.5px solid var(--border2); background: var(--bg2);
+  color: var(--text); font-size: 14px; font-family: 'Cairo', sans-serif;
+  outline: none; transition: border-color .2s;
+}
+.search-wrap input:focus { border-color: var(--gold); }
+.search-wrap input::placeholder { color: var(--text3); }
+
+/* WEEK LABEL */
+.week-label {
+  font-size: 10px; font-weight: 700; color: var(--text3);
+  letter-spacing: 1px; text-transform: uppercase;
+  margin: 1.25rem 0 .6rem; padding-right: 4px;
+}
+
+/* CARD */
+.card {
+  background: var(--bg2); border: 0.5px solid var(--border);
+  border-radius: var(--radius); padding: 1rem 1.25rem;
+  margin-bottom: .6rem; display: grid;
+  grid-template-columns: 44px 1fr auto; gap: 12px; align-items: start;
+  cursor: pointer; transition: border-color .2s, background .2s;
+}
+.card:hover { border-color: var(--border2); background: var(--bg3); }
+.card.done { border-color: rgba(46,216,163,0.3); background: rgba(46,216,163,0.04); }
+.card.open { border-color: var(--border2); }
+
+/* DAY BADGE */
+.day-badge {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.day-badge.tl { background: var(--tl-dim); border: 1px solid rgba(59,158,255,0.2); }
+.day-badge.ag { background: var(--ag-dim); border: 1px solid rgba(46,216,163,0.2); }
+.day-badge.hr { background: var(--hr-dim); border: 1px solid rgba(167,139,250,0.2); }
+.day-badge .d-type { font-size: 8px; font-weight: 700; }
+.day-badge.tl .d-type { color: var(--tl); }
+.day-badge.ag .d-type { color: var(--ag); }
+.day-badge.hr .d-type { color: var(--hr); }
+.day-badge .d-num { font-size: 16px; font-weight: 700; line-height: 1; }
+.day-badge.tl .d-num { color: var(--tl); }
+.day-badge.ag .d-num { color: var(--ag); }
+.day-badge.hr .d-num { color: var(--hr); }
+
+/* CARD BODY */
+.card-body { min-width: 0; }
+.card-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 4px; }
+.tag {
+  font-size: 9px; font-weight: 700; padding: 2px 8px;
+  border-radius: 10px; letter-spacing: .4px;
+}
+.tag-mindset { background: rgba(230,168,23,0.12); color: var(--gold); }
+.tag-communication { background: rgba(59,158,255,0.12); color: var(--tl); }
+.tag-performance { background: rgba(46,216,163,0.12); color: var(--ag); }
+.tag-decision { background: rgba(255,100,120,0.12); color: #FF6478; }
+.tag-culture { background: rgba(167,139,250,0.12); color: var(--hr); }
+.tag-hr { background: rgba(167,139,250,0.12); color: var(--hr); }
+.tag-motivation { background: rgba(230,168,23,0.12); color: var(--gold); }
+.card-body h3 { font-size: 14px; font-weight: 600; color: var(--text); line-height: 1.4; }
+.story-wrap { max-height: 0; overflow: hidden; transition: max-height .35s ease; }
+.story-wrap.open { max-height: 400px; }
+.story {
+  font-size: 12.5px; color: var(--text2); line-height: 1.7;
+  margin-top: 8px; padding-top: 8px; border-top: 0.5px solid var(--border);
+}
+.moral {
+  margin-top: 8px; padding: 8px 12px; border-radius: var(--radius-sm);
+  font-size: 12px; font-weight: 600; line-height: 1.5; border-right: 3px solid;
+}
+.moral.tl { background: var(--tl-dim); border-color: var(--tl); color: #7EC4FF; }
+.moral.ag { background: var(--ag-dim); border-color: var(--ag); color: #7EECD0; }
+.moral.hr { background: var(--hr-dim); border-color: var(--hr); color: #C4B5FD; }
+.goal-line { font-size: 11px; color: var(--text3); margin-top: 6px; }
+.goal-line span { color: var(--gold); font-weight: 600; }
+
+/* CHECK */
+.check-col { display: flex; flex-direction: column; align-items: center; gap: 5px; }
+.check-btn {
+  width: 26px; height: 26px; border-radius: 50%;
+  border: 1.5px solid var(--border2); background: none; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; transition: all .2s; color: var(--text3);
+}
+.check-btn:hover { border-color: var(--done); }
+.check-btn.checked { background: var(--done); border-color: var(--done); color: #0D0F14; font-weight: 700; }
+.date-lbl { font-size: 9px; color: var(--text3); text-align: center; max-width: 50px; line-height: 1.3; }
+
+/* EMPTY */
+.empty { text-align: center; padding: 4rem; color: var(--text3); font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="app">
+
+  <div class="header">
+    <div class="header-icon">🎯</div>
+    <div>
+      <h1>90-Day Leadership Tracker</h1>
+      <p>معلومة يومية لكل مستوى — Team Leaders · Agents · HR</p>
+    </div>
+    <div class="header-date">
+      <div class="d-label">اليوم</div>
+      <div class="d-val" id="today-lbl"></div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat gold"><div class="stat-n" id="s-done">0</div><div class="stat-l">تم تسليمها</div></div>
+    <div class="stat"><div class="stat-n">90</div><div class="stat-l">إجمالي المعلومات</div></div>
+    <div class="stat tl"><div class="stat-n" id="s-tl-done">0</div><div class="stat-l">TL مكتمل</div></div>
+    <div class="stat ag"><div class="stat-n" id="s-ag-done">0</div><div class="stat-l">Agents مكتمل</div></div>
+  </div>
+
+  <div class="prog-wrap">
+    <div class="prog-top">
+      <span>تقدم الـ 90 يوم</span>
+      <strong id="pct-lbl">0%</strong>
+    </div>
+    <div class="bar-outer"><div class="bar-inner" id="prog-bar" style="width:0%"></div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active-tl" id="tab-tl" onclick="setTab('tl')">🔵 Team Leaders</button>
+    <button class="tab" id="tab-ag" onclick="setTab('ag')">🟢 Agents</button>
+    <button class="tab" id="tab-hr" onclick="setTab('hr')">🟣 HR Tips</button>
+  </div>
+
+  <div class="search-wrap">
+    <input type="text" id="search" placeholder="ابحث عن معلومة أو كلمة..." oninput="renderCards()">
+  </div>
+
+  <div id="cards-container"></div>
+</div>
+
+<script>
+const d = new Date();
+document.getElementById('today-lbl').textContent = d.toLocaleDateString('ar-EG',{weekday:'short',day:'numeric',month:'long'});
+
+const DATA = {
+tl:[
+{day:1,tag:'mindset',title:'الفرق بين المدير والقائد',story:'كان فيه مدير في شركة كبيرة بيقول لناسه دايماً "اعمل كدا عشان أنا قلتلك". جه واحد تاني قعد مكانه وبدأ يشرح ليه كل قرار. الناس فضلت تشتغل حتى لما المدير مش موجود لأنهم فاهمين الهدف.',moral:'القائد بيوضح الـ WHY، المدير بيقول الـ WHAT. وضّح لتيمك دايماً الغرض من أي تاسك.',goal:'هدف اليوم: قول لواحد في التيم ليه بتطلب منه حاجة، مش بس إيه الحاجة.'},
+{day:2,tag:'communication',title:'قاعدة الـ 3 ثواني قبل الرد',story:'عالم نفس اسمه Victor Frankl قال: "بين المحفز والاستجابة فيه مساحة — هذه المساحة هي حريتنا". المدير اللي بيرد على أي مشكلة على طول بيحل المشكلة الغلط في معظم الأوقات.',moral:'قبل ما ترد على أي موقف صعب، خد 3 ثواني صمت. اللي بيتحكم في ردود فعله بيتحكم في فريقه.',goal:'هدف اليوم: لما يجيلك موقف محرج، اتنفس وفكر 3 ثواني قبل الكلام.'},
+{day:3,tag:'performance',title:'مبدأ الـ 1% يومياً',story:'باحث اسمه James Clear كتب في كتاب Atomic Habits إن التحسين بـ 1% كل يوم = 37 ضعف أحسن في نهاية السنة. Team Lead واحد قرر كل أسبوع يحسن حاجة صغيرة جداً في الـ workflow — بعد 6 شهور الفريق بقى أسرع بـ 40%.',moral:'التطوير مش بيجي من قرارات كبيرة، بيجي من تحسينات صغيرة متراكمة. سأل نفسك: إيه الـ 1% اللي ممكن تحسنه النهارده؟',goal:'هدف اليوم: حدد حاجة صغيرة واحدة في الروتين اليومي للتيم وحسّنها.'},
+{day:4,tag:'communication',title:'الاستماع الفعال — مش بس سامع',story:'كانت فيه تيم ليدر شاطرة جداً في الكلام بس محدش في تيمها كان بيحس إنها بتسمعه. لما عملت تدريب على Active Listening واتعلمت إنها تعيد صياغة اللي بيقولوه، الثقة في الفريق زادت 60% في شهر واحد.',moral:'الاستماع الفعال = تسمع + تفهم + تأكد إنك فهمت. جملة زي "يعني إنت قصدك..." بتعمل فرق ضخم.',goal:'هدف اليوم: في أي محادثة، أعد صياغة اللي قاله الشخص قبل ما تجاوب.'},
+{day:5,tag:'decision',title:'مصفوفة أيزنهاور للأولويات',story:'الرئيس الأمريكي أيزنهاور كان بيقول: "الأهم نادراً ما يكون عاجلاً، والعاجل نادراً ما يكون أهم". عمل مصفوفة 4 خانات: مهم+عاجل، مهم+مش عاجل، مش مهم+عاجل، مش مهم+مش عاجل.',moral:'الـ Team Lead الشاطر بيعرف الفرق بين العاجل والمهم ومش بيضيع وقت فريقه في حاجات مش مهمة.',goal:'هدف اليوم: اعمل قائمة بتاسكات النهارده وصنفها في المصفوفة دي.'},
+{day:6,tag:'mindset',title:'Growth Mindset vs Fixed Mindset',story:'عالمة نفس اسمها Carol Dweck اكتشفت إن الناس نوعين: ناس بتقول "أنا مش موهوب" لما بتفشل، وناس بتقول "محتاج أتعلم أكتر". الفئة التانية أثبتت إنها بتحقق نتايج أحسن بكتير على المدى البعيد.',moral:'لما حد في تيمك بيغلط، خليه يفهم إن الغلطة جزء من التعلم مش علامة فشل. زرع الـ growth mindset في التيم.',goal:'هدف اليوم: لما حد يغلط، قوله "إيه اللي هتعمله مختلف المرة الجاية؟" بدل "ليه غلطت؟"'},
+{day:7,tag:'culture',title:'Psychological Safety — الأمان النفسي',story:'Google عملت دراسة على أكتر من 180 فريق لمدة سنتين. النتيجة المفاجأة: مش المهارات هي اللي بتخلي الفريق ناجح، اللي بتخليه ناجح هو إن الناس محسة بأمان إنها تتكلم وتغلط من غير خوف.',moral:'لو حد في تيمك خايف يقول رأيه، ده مشكلتك إنت مش مشكلته هو. خلي الاجتماعات مكان آمن للأفكار.',goal:'هدف اليوم: في أي ميتنج، شجع أهدأ شخص في الأوضة إنه يتكلم.'},
+{day:8,tag:'performance',title:'قاعدة الـ 80/20 (Pareto Principle)',story:'عالم إيطالي اسمه Pareto لاحظ إن 80% من الأرض عند 20% من الناس. الباحثين لقوا إن القاعدة دي بتنطبق على تقريباً كل حاجة: 80% من النتايج بتيجي من 20% من الجهد.',moral:'اسأل نفسك: أنهي 20% من التاسكات بتجيب 80% من النتايج؟ ركّز وقت تيمك هناك.',goal:'هدف اليوم: حدد الـ 3 تاسكات الأهم في الأسبوع دا وخلي التيم يبدأ بيهم.'},
+{day:9,tag:'communication',title:'Feedback Sandwich — طريقة الساندويتش',story:'كتير من الـ TLs لما بيديوا feedback سلبي، التيم بيتضايق أو ببساطة ما بيسمعش. طريقة الـ Sandwich عبارة عن: إيجابي + تحسين مطلوب + إيجابي. الناس بتستوعب الانتقاد أكتر لما بيحسوا إنك شايفهم كمان.',moral:'Feedback مش هجوم، Feedback هو هدية بتديها لحد عشان يتحسن. خليها محترمة وواضحة.',goal:'هدف اليوم: ادي feedback لحد في تيمك بطريقة الساندويتش.'},
+{day:10,tag:'mindset',title:'قوة الـ "لسه"',story:'Carol Dweck برضو اكتشفت إن كلمة "لسه" بتغير كل حاجة. بدل "مش عارف أعمل كدا" قول "لسه مش عارف أعمل كدا". الكلمة دي بتفتح الباب للتعلم وبتشيل الإحساس بالفشل.',moral:'"لسه" هي أقوى كلمة في تطوير الناس. خليها جزء من ثقافة التيم.',goal:'هدف اليوم: استخدم كلمة "لسه" لما أي حد في التيم يقولك "مش عارف".'},
+{day:11,tag:'decision',title:'Bias for Action — التحيز للفعل',story:'Jeff Bezos قال إن Amazon بنيت على مبدأ واحد: "اتخذ قرار بـ 70% من المعلومات المتاحة، انتظارك لـ 90% هيكلفك الفرصة". الـ TL اللي بينتظر كل المعلومات غالباً متأخر.',moral:'قرار كويس بسرعة أحسن من قرار مثالي متأخر. اتعلم تاخد قرارات بمعلومات ناقصة.',goal:'هدف اليوم: خد قرار كنت بتأجله واعمله النهارده.'},
+{day:12,tag:'performance',title:'مفهوم الـ Flow State',story:'عالم نفس اسمه Mihaly Csikszentmihalyi اكتشف إن الناس بتكون في أحسن أداء لما تكون في "حالة انسياب" — يعني التحدي بيتوافق مع المهارة. لو التحدي أكبر = Anxiety، لو أصغر = Boredom.',moral:'خليك عارف مستوى كل شخص في تيمك وادي كل واحد تحدي بيناسب مستواه بالظبط.',goal:'هدف اليوم: ارتب مهام التيم بحيث كل واحد شغال على حاجة بتتحداه بس مش بتضغطه.'},
+{day:13,tag:'communication',title:'الـ One-on-One Meetings',story:'دراسة من Gallup لاقت إن الموظفين اللي بيعملوا اجتماع فردي أسبوعي مع مديرهم عندهم 3 أضعاف Engagement من اللي مش بيعملوا. المشكلة إن معظم TLs بيلغوا الـ 1:1 أول ما يضغط الشغل.',moral:'الـ 1:1 مش luxury — ده investment أساسي في العلاقة. خليه ثابت حتى لو 15 دقيقة.',goal:'هدف اليوم: ابدأ جدول أسبوعي لـ 1:1 مع كل عضو في التيم.'},
+{day:14,tag:'culture',title:'أهمية الاحتفال بالإنجازات الصغيرة',story:'دراسة من Harvard Business School لاقت إن أكتر حاجة بتحفز الناس في الشغل مش الراتب ولا الترقية — هي إحساسهم بالتقدم. حتى الخطوات الصغيرة لما اتعمل acknowledge بتزود الـ motivation.',moral:'احتفل بكل win صغيرة في تيمك. جملة زي "عملتوها عظيم النهارده" بتعمل فرق حقيقي.',goal:'هدف اليوم: اذكر واحد في التيم بإنجاز عمله هذا الأسبوع ولو كان صغير.'},
+{day:15,tag:'mindset',title:'Accountability vs Blame — المسؤولية مش العقاب',story:'فيه فرق ضخم بين ثقافة بتحاسب الناس وثقافة بتلاوم الناس. الثقافة الأولى بتسأل "إيه اللي حصل وإيه المطلوب تغييره؟" الثانية بتسأل "مين اللي غلط؟" الأولى بتطور، التانية بتخوّف.',moral:'بنِ ثقافة Accountability مش Blame. الهدف دايماً التحسين مش العقاب.',goal:'هدف اليوم: لما حاجة بتغلط، ابدأ بـ "إيه اللي هنعمله مختلف؟" مش "مين اللي كسر؟"'},
+{day:16,tag:'performance',title:'مبدأ الـ Reverse Engineering للأهداف',story:'رياضي قرر يكسب بطولة عالمية. بدل ما يقول "هحاول أتمرن أكتر"، فكّك الهدف: محتاج 500 ساعة تدريب = 10 ساعات في الأسبوع = ساعتين وربع في اليوم. الرقم الكبير بقى قابل للتنفيذ.',moral:'كل هدف كبير لازم يتفكك لخطوات صغيرة يومية. ساعد تيمك يعمل كدا.',goal:'هدف اليوم: خد هدف شهري للتيم وفككه لتاسكات أسبوعية.'},
+{day:17,tag:'communication',title:'الذكاء العاطفي — EQ',story:'Daniel Goleman أثبت إن الـ EQ بيحدد 67% من نجاح القادة، أكتر من الـ IQ. الـ TL اللي بيعرف يقرأ مشاعر الناس ويتعامل معها بيبني تيمات أقوى بكتير من اللي بيتعامل بالمنطق البحت.',moral:'ادي اهتمام لمشاعر تيمك زي ما بتدي اهتمام للأرقام. الاتنين بيأثروا على النتايج.',goal:'هدف اليوم: اسأل واحد في التيم "عامل إيه النهارده؟" وانتظر إجابة حقيقية.'},
+{day:18,tag:'decision',title:'Second Order Thinking — التفكير من الدرجة التانية',story:'كل قرار بيجيب نتيجة فورية، بس القرار الكويس بيفكر في نتيجة نتيجة القرار. مثلاً: "هخليهم يشتغلوا أوفر تايم" = productivity زادت (1st order). بس بعد شهر = إرهاق وـ turnover عالي (2nd order).',moral:'قبل أي قرار، اسأل: "وبعدين؟" مرتين على الأقل.',goal:'هدف اليوم: خد قرار مهم وفكر فيه من الدرجة التانية — إيه النتايج بعيدة المدى؟'},
+{day:19,tag:'culture',title:'Building Trust — بناء الثقة خطوة خطوة',story:'Patrick Lencioni في كتاب The Five Dysfunctions of a Team قال إن الثقة هي الأساس اللي كل حاجة تانية بتبني عليها. من غيرها: الصراع خايف، القرارات ضعيفة، والنتايج غالباً مخيبة.',moral:'الثقة مش بتجي بين يوم وليلة، بتبنى بتصرفات صغيرة ومتسقة على مدار وقت.',goal:'هدف اليوم: اعمل حاجة صغيرة وعدت بيها لحد في التيم وما عملتهاش لسه.'},
+{day:20,tag:'mindset',title:'Stoic Leadership — قيادة الرواقيين',story:'ماركوس أوريليوس، أقوى رجل في العالم في عصره، كان بيقول: "مش اللي بيحصلك هو المشكلة، لكن ردة فعلك عليه". قاد إمبراطورية ضخمة بهدوء حتى في أصعب الأوقات.',moral:'الـ TL القوي مش اللي ما بيتضايقش، هو اللي بيتحكم في ردة فعله حتى وهو متضايق.',goal:'هدف اليوم: لما تحس بضغط، خد نفس عميق وفكر: "إيه اللي في إيدي أغيره هنا؟"'},
+{day:21,tag:'performance',title:'KPIs مش بس أرقام — هي قصة',story:'TL في شركة sales كان بيقارع تيمه كل يوم بالأرقام. يوم لقى إن الأرقام مش بتتحسن. حل واحده: خلى الـ KPIs تحكي قصة — "النهارده وصلنا X، المسافة بيننا وبين الهدف هي Y، وده معناه Z".',moral:'الـ KPIs مجردة والناس بتتجاوب مع القصص. اربط الأرقام بمعنى حقيقي.',goal:'هدف اليوم: شرح لتيمك الـ KPIs بطريقة قصة مش مجرد أرقام.'},
+{day:22,tag:'communication',title:'مبدأ Radical Candor',story:'Kim Scott مؤسسة مفهوم Radical Candor قالت: أحسن قادة بيجمعوا بين اتنين: يهتموا بالشخص شخصياً ويتحداه مهنياً. من غير الاتنين دول، الـ feedback بيبقى إما وحش أو فاضي.',moral:'Radical Candor = اهتمام حقيقي + صراحة مباشرة. مش واحد منهم بس.',goal:'هدف اليوم: ادي feedback صريح لحد في التيم مع إنك توضحه إن ده من مكان اهتمامك بنجاحه.'},
+{day:23,tag:'mindset',title:'Ego is the Enemy — الأنا العدو',story:'Ryan Holiday كتب إن أكتر حاجة بتوقف نمو القادة هي الأنا. لما الـ TL بيحتاج يكون صح دايماً، التيم بيوقف يقدم أفكار ويبدأ يشتغل بأمان مش بإبداع.',moral:'القائد الحقيقي بيهتم بالنتيجة الصح مش بإنه يكون صح. اقبل إن التيم يعرف حاجات إنت مش عارفها.',goal:'هدف اليوم: اطلب رأي التيم في قرار كنت هتاخده لوحدك.'},
+{day:24,tag:'performance',title:'مبدأ الـ Deep Work',story:'Cal Newport في كتابه Deep Work أثبت إن الشغل العميق اللي بيحتاج تركيز كامل بيتم في 4 ساعات بس في اليوم لأغلب الناس. الباقي distracted work.',moral:'خلي للتيم وقت "عميق" من غير interruptions. الـ productivity هترتفع بشكل واضح.',goal:'هدف اليوم: حدد ساعتين في اليوم للتيم للشغل بدون meetings أو interruptions.'},
+{day:25,tag:'decision',title:'قاعدة الـ 10/10/10',story:'Suzy Welch بتقول لما تكون مش متأكد من قرار، اسأل نفسك: هفكر في القرار ده ازاي بعد 10 دقايق؟ 10 شهور؟ 10 سنين؟ الأسئلة دي بتبعدك عن الـ short-term thinking.',moral:'القرارات الكبيرة لازم تمر على فلتر الوقت. التوتر اللي بتحسه دلوقتي مش دايماً دليل على إن القرار غلط.',goal:'هدف اليوم: طبّق قاعدة الـ 10/10/10 على قرار بتفكر فيه.'},
+{day:26,tag:'communication',title:'الـ Nonviolent Communication — NVC',story:'Marshall Rosenberg طور طريقة للكلام بدون إنك تتهم حد. بدل "إنت دايماً متأخر" قول "لاحظت إنك تأخرت النهارده، وده بيأثر على التيم. إيه اللي حصل؟" الفرق ضخم في الاستجابة.',moral:'الكلام عن الأفعال مش الشخصية. "لاحظت" بدل "إنت دايماً".',goal:'هدف اليوم: في أي محادثة صعبة، ابدأ بـ "لاحظت" وابتعد عن "إنت دايماً".'},
+{day:27,tag:'culture',title:'مفهوم الـ Servant Leadership',story:'Robert Greenleaf قلب مفهوم القيادة: القائد مش هو اللي عنده أكتر سلطة، هو اللي بيخدم تيمه ويشيل العقبات من قدامهم. Apple, Southwest Airlines, وغيرهم بنوا نجاحهم على الفلسفة دي.',moral:'سؤال الـ Servant Leader: "إيه اللي محتاجينه عشان أشيله من قدامكم؟"',goal:'هدف اليوم: اسأل تيمك: "فيه حاجة بتعيقكم أنا أقدر أساعد فيها؟"'},
+{day:28,tag:'mindset',title:'Ikigai — سبب الاستيقاظ',story:'الـ Ikigai مفهوم ياباني معناه "سبب وجودك". بيقول إن السعادة الحقيقية في تقاطع أربع دوايرة: اللي بتحبه + اللي بتتقنه + اللي العالم محتاجه + اللي بتتكسب منه. الـ TL اللي بيساعد تيمه يلاقي الـ Ikigai ده بيولّد طاقة مختلفة.',moral:'ساعد كل واحد في تيمك يفهم ليه شغله مهم وله معنى. الـ purpose بيتغلب على أي motivation خارجية.',goal:'هدف اليوم: اسأل نفسك: إيه اللي بيخلي كل واحد في تيمك يصحى الصبح ويجي الشغل؟'},
+{day:29,tag:'performance',title:'مبدأ الـ After Action Review',story:'الجيش الأمريكي بعد كل عملية يعمل AAR: إيه اللي كان المفروض يحصل؟ إيه اللي حصل فعلاً؟ إيه الفرق؟ إيه اللي هنعمله مختلف؟ الطريقة دي خلّت الجيش يتعلم بسرعة ضخمة من تجاربه.',moral:'التعلم من التجربة مش بيحصل أوتوماتيك — محتاج عملية منظمة. اعمل AAR بعد كل project كبير.',goal:'هدف اليوم: بعد أي تاسك خلص، اجلس مع التيم دقيقتين: إيه اللي اتعلمنا؟'},
+{day:30,tag:'culture',title:'نهاية الشهر الأول — Reflection',story:'John Dewey قال: "الناس ما بتتعلمش من التجربة، بتتعلم من التأمل في التجربة". الشهر الأول خلص — إيه اللي اتغير؟ إيه اللي اتعلمه التيم؟ إيه اللي إنت اتعلمته؟',moral:'القائد اللي بيتأمل ويفكر بيتطور. خصص وقت في نهاية كل شهر للـ reflection.',goal:'هدف النهارده: اعمل اجتماع قصير مع التيم تحتفلوا فيه بأكبر 3 إنجازات الشهر الأول.'},
+],
+tl2:[
+{day:31,tag:'decision',title:'فن التفويض — Delegation',story:'Warren Buffett بيقول: "التفويض مش تخلي عن المسؤولية، هو ضرب بسهم واحد في عصفورين — إنت بتتفرغ لأهم شغلك والتاني بيتطور." معظم الـ TLs بتتأخر لأنهم بيعملوا كل حاجة بإيدهم.',moral:'التفويض هو أقوى أداة تطوير. لما بتفوّض مش بس بتريح نفسك، بتطور الناس.',goal:'هدف اليوم: حدد تاسك كنت بتعمله إنت واديه لحد في التيم.'},
+{day:32,tag:'mindset',title:'Antifragility — القوة من الصدمة',story:'نسيم طالب كتب إن الأشياء في الدنيا 3 أنواع: هشة (بتكسر من الصدمة)، قوية (بتتحمل)، ومش هشة — Antifragile (بتقوى من الصدمة). المستهدف إن تيمك يكون Antifragile.',moral:'بنِ تيماً بيتعلم ويتقوى من كل مشكلة مش تيم بيتجمد أو بيكسر.',goal:'هدف اليوم: لما مشكلة تحصل، اسأل التيم: "إزاي الموقف ده هيخلينا أقوى؟"'},
+{day:33,tag:'performance',title:'مبدأ الـ SMART Goals',story:'George Doran صمم طريقة تحديد الأهداف: Specific, Measurable, Achievable, Relevant, Time-bound. الهدف "هتحسنوا" فاضي. الهدف "هنوصل لـ X بحلول Y بالطريقة Z" ده هدف حقيقي.',moral:'الأهداف الضبابية بتولد جهود ضبابية. حدد وقيّس كل هدف.',goal:'هدف اليوم: راجع أهداف تيمك وتأكد إنها SMART.'},
+{day:34,tag:'communication',title:'The Power of "Yes, And"',story:'في مسرح الارتجال، القاعدة الأساسية هي "نعم، وبالإضافة". بتبني على فكرة الآخر مش بتهدمها. لما الـ TL بيقول "فكرة مش كويسة لأن..." الناس بتوقف تفكر. لما بيقول "نعم، وممكن كمان..." الإبداع بيانفجر.',moral:'"نعم، وبالإضافة" بيفتح الأبواب. "لأ، لأن" بيقفلها. جرب الأولى في اجتماعاتك.',goal:'هدف اليوم: في أي نقاش، استبدل "لأ" أو "بس" بـ "نعم، وبالإضافة".'},
+{day:35,tag:'mindset',title:'قانون Parkinson — الشغل بيملا الوقت',story:'Parkinson اكتشف إن "الشغل بيتمدد ليملا الوقت المتاح ليه". لو قلت لحد "خلص التقرير ده أي وقت"، هياخد أسبوع. لو قلت "عندك 3 ساعات"، هيخلصه في 3 ساعات بنفس الجودة.',moral:'الـ deadlines المحددة مش ضغط — هي محرك. حدد وقت لكل تاسك.',goal:'هدف اليوم: لكل تاسك في التيم، حدد وقت محدد مش "خلص أي وقت".'},
+{day:36,tag:'culture',title:'مفهوم الـ Team Charter',story:'فريق كان فيه خلافات كتيرة على "مين مسؤول عن إيه". الـ TL الجديد عمل Team Charter: وثيقة بتوضح قيم التيم، طريقة الشغل، المسؤوليات، وكيفية حل الخلافات. الخلافات نقصت بـ 70%.',moral:'الـ implicit agreements بتولد خلافات. اعمل الـ agreements explicit.',goal:'هدف اليوم: ابدأ Team Charter بسيط مع تيمك — حتى لو على ورقة.'},
+{day:37,tag:'performance',title:'مبدأ الـ Pomodoro',story:'Francesco Cirillo اخترع تقنية بسيطة في الثمانينات: شغّل 25 دقيقة تركيز كامل، بعدين 5 دقايق استراحة. اسمها Pomodoro لأنه كان بيستخدم مؤقت على شكل طماطمة. الإنتاجية ارتفعت بشكل ملحوظ للناس اللي جربتها.',moral:'التركيز المتقطع المنظم أفضل من التركيز المتواصل الهش.',goal:'هدف اليوم: شجع تيمك يجرب تقنية الـ Pomodoro يوم كامل.'},
+{day:38,tag:'decision',title:'Confirmation Bias — تحيز التأكيد',story:'عقولنا بتبحث بطبيعتها عن المعلومات اللي بتأكد اللي احنا كنا بنعتقده. ده بيخلي الـ TLs أحياناً بيشوفوا في الداتا بس اللي عايزين يشوفوه.',moral:'دور دايماً على المعلومات اللي تتحداك. السؤال الصح مش "هل محق؟" لكن "هل ممكن أكون غلط؟"',goal:'هدف اليوم: خد قرار هتاخده وفكر: إيه المعلومات اللي ممكن تثبت إن القرار غلط؟'},
+{day:39,tag:'communication',title:'مبدأ الـ BLUF',story:'الجيش الأمريكي بيستخدم مبدأ BLUF: Bottom Line Up Front. يعني ابدأ بالنتيجة الرئيسية أول، وبعدين وضح. بدل ما تحكي قصة طويلة وتوصل للنتيجة آخر، قول النتيجة أول ثم اشرح.',moral:'وقت تيمك ثمين. ابدأ باللي الشخص محتاج يعرفه أول.',goal:'هدف اليوم: في كل تواصل، ابدأ بالنقطة الأهم مش بالمقدمة.'},
+{day:40,tag:'mindset',title:'Discipline = Freedom',story:'Jocko Willink، ضابط Navy SEAL، بيقول إن الانضباط هو اللي بيديك الحرية. الناس الأكتر انضباطاً في حياتهم هم الأكتر حرية — لأن عندهم وقت وطاقة للي بيحبوه.',moral:'الـ TL المنضبط بيديه الحرية هو وتيمه. الفوضى بتسرق الوقت والطاقة.',goal:'هدف اليوم: حدد روتين يومي ثابت للتيم للجزء الأهم في يومكم.'},
+{day:41,tag:'performance',title:'مبدأ الـ T-Shaped Skills',story:'شركات زي Google وMcKinsey بتفضل الناس الـ "T-Shaped": عندهم عمق في مجال واحد وعرض في مجالات تانية. الـ TL الكويس بيساعد ناسه يطوروا الـ T-Shape بتاعتهم.',moral:'طور في كل واحد عمق في مجاله مع exposure لمجالات تانية. ده بيولد تيم أكتر flexibility.',goal:'هدف اليوم: سأل كل واحد في التيم: إيه المجال اللي عايز يتعلمه خارج شغله الأساسي؟'},
+{day:42,tag:'culture',title:'احتفالية الـ Failure — تعلم من الفشل',story:'شركة زي Pixar عندها اجتماعات دورية بيعترفوا فيها بالأخطاء ويتعلموا منها. ثقافة الاعتراف بالغلطة بدون خوف خلّت Pixar تنتج أفضل الأفلام في التاريخ.',moral:'لو تيمك خايف يعترف بالأخطاء، هتفضل تتعلم من نفس الأخطاء كمان وكمان.',goal:'هدف اليوم: شارك مع تيمك غلطة عملتها وإيه اللي اتعلمته منها.'},
+{day:43,tag:'mindset',title:'Circle of Control vs Circle of Concern',story:'Stephen Covey قسّم الدنيا لـ: دايرة ما بنتحكم فيه، ودايرة ما بيقلقنا بس مش في إيدنا. الناس الفعّالة بتركز طاقتها على دايرة التحكم. الباقيين بيضيعوا طاقتهم في القلق.',moral:'ركّز إنت وتيمك على اللي في إيدكم. القلق من غير فعل مجرد طاقة ضايعة.',goal:'هدف اليوم: لو فيه مشكلة بتقلق التيم، قسّمها: إيه اللي في إيدنا وإيه اللي مش في إيدنا؟'},
+{day:44,tag:'communication',title:'Mirroring — تقنية المرآة',story:'Chris Voss، محقق مفاوضات FBI، اكتشف إن تكرار آخر 2-3 كلمات قالها الشخص بيخليه يكمل الكلام ويكشف معلومات أكتر. التقنية دي بتبني connection قوي في وقت قصير.',moral:'Mirroring أداة قوية للتواصل. تعلمها وعلّمها لتيمك للتعامل مع الكلاينتس والبعض.',goal:'هدف اليوم: في محادثة، جرب تكرر آخر كلمتين قالهم الشخص وشوف إيه اللي بيحصل.'},
+{day:45,tag:'performance',title:'منتصف الرحلة — Mid-Journey Review',story:'البحاثة لاقوا إن الفرق بتعمل أداء أضعف في المنتصف من الرحلة — اسمه "Mid-Slump". لكن الفرق اللي بتعمل مراجعة في المنتصف بتتحسن بشكل ملحوظ في النصف التاني.',moral:'المنتصف مش وقت استرخاء — وقت تقييم وتسريع. احتفل بما تم وركّز على ما تبقى.',goal:'هدف اليوم: راجع مع تيمك: وصلنا فين؟ وإيه المطلوب في الـ 45 يوم الجاية؟'},
+{day:46,tag:'mindset',title:'First Principles Thinking',story:'Elon Musk بيقول إنه بيفكر من First Principles: بدل ما يقبل "ده كدا لأن دايماً كان كدا"، بيرجع للأساسيات ويبني من هناك. كدا استطاع يخفض تكلفة الصواريخ بـ 90%.',moral:'تحدى الـ assumptions. "دايماً عملناها كدا" مش سبب كافي لتكمل كدا.',goal:'هدف اليوم: خد عملية في التيم وسأل: ليه بنعملها كدا؟ هل في طريقة أحسن؟'},
+{day:47,tag:'culture',title:'مفهوم الـ Rituals في الفريق',story:'الفرق الناجحة زي الفرق الرياضية الأبطال عندها rituals ثابتة — طريقة معينة بيبدأوا بيها اليوم، طريقة معينة بيختموا بيها الأسبوع. الـ rituals دي بتبني هوية الفريق وانتماء.',moral:'صمم rituals بسيطة لتيمك — حتى لو تحية خاصة أو طريقة معينة لإعلان الـ wins.',goal:'هدف اليوم: ابتكر مع تيمك ritual صغيرة ثابتة تعملوها كل أسبوع.'},
+{day:48,tag:'decision',title:'مبدأ الـ Pre-mortem',story:'Gary Klein طور تقنية الـ Pre-mortem: قبل ما تبدأ أي project، تخيّل إنه فشل فشل ذريع. السبب ده؟ السؤال ده بيكشف مخاطر كانت هتفوت لو بس فكرت بالإيجابي بس.',moral:'Optimism مهم، بس Pre-mortem بيحميك من الأخطاء اللي ممكن تتجنبها.',goal:'هدف اليوم: قبل أي قرار مهم، اسأل التيم: لو ده فشل، إيه السبب الأغلب؟'},
+{day:49,tag:'communication',title:'قوة الـ Storytelling في القيادة',story:'Simon Sinek لاحظ إن أعظم القادة مش بيقدموا بيانات — بيحكوا قصص. Martin Luther King ما قالش "عندي خطة" — قال "عندي حلم". القصة بتلامس القلب قبل العقل.',moral:'لو عايز تيمك يتحرك، اكسب قلوبهم بقصة قبل ما تكسب عقولهم ببيانات.',goal:'هدف اليوم: في أول اجتماع جاي، ابدأ بقصة قصيرة مش بأرقام.'},
+{day:50,tag:'mindset',title:'Imposter Syndrome — متلازمة المحتال',story:'70% من الناس الناجحة حسّت في وقت ما إنها "مش مستاهلة" أو إن نجاحها كان حظ. حتى Einstein وMaya Angelou اعترفوا بيها. ده مش معناه ضعف — معناه وعي.',moral:'لما تيمك يشك في نفسه، ذكّره بإنجازاته الفعلية. الأرقام والحقائق بتكذّب الـ Imposter Syndrome.',goal:'هدف اليوم: لو حسيت بالشك في نفسك، اكتب 5 إنجازات عملتها في آخر 3 شهور.'},
+{day:51,tag:'performance',title:'مبدأ الـ Marginal Gains',story:'Dave Brailsford، مدرب فريق بريطانيا للدراجات، حسّن كل حاجة صغيرة بـ 1%: العجلات، الوسادات، حتى طريقة غسيل الأيدي. الفريق ده كسب Tour de France أول مرة في تاريخه بعد 3 سنين.',moral:'مجموع تحسينات صغيرة = نتيجة ضخمة. ابحث مع تيمك عن الـ 1% في كل حاجة.',goal:'هدف اليوم: حدد 3 حاجات صغيرة في عملية التيم ممكن تتحسن بـ 1%.'},
+{day:52,tag:'decision',title:'Occam\'s Razor — شفرة أوكام',story:'فيلسوف اسمه William of Ockham قال: "الحل الأبسط غالباً هو الأصح". لما عندك مشكلة، الميل الطبيعي هو تفكر في حلول معقدة. لكن أغلب الأوقات الحل البسيط هو الكويس.',moral:'لما الأمور تتعقد، ارجع للبساطة. الحل المعقد أحياناً هو علامة إنك ما فهمتش المشكلة كويس.',goal:'هدف اليوم: خد مشكلة في التيم وحاول تحلها بأبسط طريقة ممكنة.'},
+{day:53,tag:'culture',title:'Diversity of Thought — تنوع التفكير',story:'هيئة NASA بعد حادثة Challenger حللت المشكلة ولاقت إن الكل في الغرفة كان بيفكر نفس التفكير ومحدش جرؤ يعارض. الـ Groupthink ده كلّف أرواح. التنوع في التفكير بيمنع الكوارث.',moral:'دور على الصوت المختلف في تيمك وشجعه. التوافق الزايد علامة خطر.',goal:'هدف اليوم: في الاجتماع الجاي، اطلب من شخص يلعب دور "المعارض" حتى لو هو مش مقتنع.'},
+{day:54,tag:'mindset',title:'Beginner\'s Mind — عقل المبتدئ',story:'في التقليد الزن الياباني، مفهوم "Shoshin" يعني إنك تتعامل مع كل موقف زي ما لو أنت مبتدئ — فضولي ومنفتح. الخبراء أحياناً بيفضلوا ما بيتعلموش لأنهم "يعرفوا كل حاجة" أصلاً.',moral:'محافظتك على فضول المبتدئ هي اللي بتخليك تتطور حتى وإنت خبير.',goal:'هدف اليوم: خد حاجة بتعرفها كويس واسأل نفسك: إيه اللي ممكن أكون مش عارفه فيها؟'},
+{day:55,tag:'performance',title:'Energy Management مش Time Management',story:'Tony Schwartz كتب إن إدارة الطاقة أهم من إدارة الوقت. يوم بـ 8 ساعات طاقة عالية أفضل من يوم بـ 12 ساعة طاقة منخفضة. الـ TL الكويس بيحمي طاقته وطاقة تيمه.',moral:'اسأل نفسك: الناس في تيمي طاقتهم عالية ولا خربانة؟ الطاقة بتنعكس على الـ output.',goal:'هدف اليوم: تأكد إن التيم بياخد استراحة حقيقية وسط اليوم. مش غداء على المكتب.'},
+{day:56,tag:'communication',title:'مبدأ الـ Appreciate Inquiry',story:'بدل ما يسأل "إيه المشاكل؟"، David Cooperrider سأل "إيه اللي شغّال كويس وليه؟" النهج ده سمي Appreciative Inquiry وثبت إنه بيولد حلول وأفكار أسرع وأفضل من نهج المشكلة-الحل.',moral:'ابحث عن القوة قبل ما تبحث عن الضعف. ابني على اللي شغّال.',goal:'هدف اليوم: في الاجتماع الجاي، ابدأ بسؤال: "إيه أحسن حاجة عملناها الأسبوع الجاي؟"'},
+{day:57,tag:'mindset',title:'Amor Fati — أحبب قدرك',story:'نيتشه قال "Amor Fati" يعني "أحبب قدرك". مش بس تتقبل اللي بيحصل، بتحبه وتستفيد منه. Marcus Aurelius كان بيطبق نفس الفكرة — قائد قوي لأنه ما بيشكيش من الظروف.',moral:'علّم تيمك يحول العقبات لوقود بدل شكاوى. "ده حصلنا، نستفيد منه إزاي؟"',goal:'هدف اليوم: خد أصعب حاجة في شغل التيم دلوقتي وحوّلها لفرصة تعلم.'},
+{day:58,tag:'performance',title:'مفهوم الـ Minimum Viable Product — MVP',story:'Eric Ries في كتاب Lean Startup قال: "ابنِ أصغر حاجة ممكنة، ابعتها، اتعلم منها". الفكرة دي مش بس للـ startups — هي طريقة تفكير لأي مشروع أو تحسين.',moral:'مش لازم يكون مثالياً عشان تبدأ. ابدأ بالـ MVP وطور.',goal:'هدف اليوم: لو فيه فكرة تطوير عندك، ابدأ بأصغر نسخة منها وطبقها.'},
+{day:59,tag:'decision',title:'Sunk Cost Fallacy — وهم التكلفة الغارقة',story:'كتير من الـ TLs بيكملوا في قرار غلط "عشان احنا استثمرنا فيه كتير". الاقتصاديين بيسموا ده Sunk Cost Fallacy. اللي حصل حصل — القرار لازم يبنى على المستقبل مش الماضي.',moral:'لو مشروع أو طريقة مش شغّالة، القرار الشجاع هو تتوقف مش تكمل عشان "استثمرنا".',goal:'هدف اليوم: فيه حاجة بتعملوها لأن "كده كنا بنعمل" بس مش بتجيب نتايج؟ وقت تراجعها.'},
+{day:60,tag:'culture',title:'نهاية الشهرين — Culture Check',story:'Edgar Schein، أب علم ثقافة المنظمات، قال إن الثقافة الحقيقية مش اللي مكتوبة على الحيط — هي "إيه اللي بيحصل لما حاجة غلط". كيف التيم بيتعامل مع الأخطاء والضغط؟',moral:'راجع ثقافة تيمك: هل الناس بتتعاون ولا بتتنافس؟ بتكشف الأخطاء ولا بتغطيها؟',goal:'هدف اليوم: اعمل استطلاع بسيط مع التيم: "على مقياس من 1 لـ 5، بتحس بأمان إنك تغلط؟"'},
+],
+tl3:[
+{day:61,tag:'mindset',title:'The Long Game — الملعب البعيد',story:'Jeff Bezos بيقول إن أغلب مشاكل الـ business جاية من التفكير على مدى 3 سنين بدل 7. الـ TL اللي بيفكر في الأمد البعيد بياخد قرارات أحسن حتى لو بتبدو صعبة في الحاضر.',moral:'التضحيات الصغيرة النهارده لها عوائد كبيرة بكره. علّم تيمك يفكر بـ long-term.',goal:'هدف اليوم: خد قرار كنت بتأجله عشان صعب دلوقتي بس صح على المدى البعيد.'},
+{day:62,tag:'performance',title:'مبدأ الـ Spaced Repetition',story:'عالم نفس اسمه Ebbinghaus اكتشف منحنى النسيان: الناس بتنسى 70% من المعلومات الجديدة في أول 24 ساعة. الحل: مراجعة المعلومات على فترات متباعدة. Anki وغيرها بنيت على المبدأ ده.',moral:'المعلومة اللي بتديها للتيم لازم تتراجع وتتكرر. مش كفاية تقولها مرة واحدة.',goal:'هدف اليوم: راجع مع التيم معلومة قيّمة قلتها الأسبوع الفات.'},
+{day:63,tag:'communication',title:'قوة الصمت في القيادة',story:'في المفاوضات، الشخص اللي بيملأ الصمت بأول كلمة غالباً هو الأضعف. Chris Voss بيقول إن الصمت أداة تفاوضية فعّالة جداً — بيجبر الطرف التاني يتكلم أكتر ويكشف معلومات.',moral:'الصمت مش ضعف. أحياناً اللي مش بتقوله أقوى من اللي بتقوله.',goal:'هدف اليوم: في محادثة صعبة، بعد ما تسأل سؤال مهم، صمت واستنى الإجابة حتى لو طولت.'},
+{day:64,tag:'mindset',title:'Memento Mori — تذكر الموت',story:'الرواقيون كانوا بيفكروا في الموت كل يوم — مش حزناً لكن كـ reminder إن الوقت محدود فيستحق يُستخدم في حاجة تستحق. Steve Jobs بيقول إن إدراكه للوت خلاه مش يضيع وقت في حاجات مش مهمة.',moral:'الوقت المورد الوحيد اللي ما بيتعوّضش. استخدم وقتك ووقت تيمك في اللي يستحق.',goal:'هدف اليوم: اسأل نفسك: لو عندي 6 شهور بس، إيه اللي كنت هاعمله مختلف في تيمي؟'},
+{day:65,tag:'culture',title:'مفهوم الـ Belonging',story:'Brené Brown أثبتت إن "الانتماء" هو الحاجة الأكتر أساسية للإنسان — أكتر من الأداء أو النجاح. الناس اللي بتحس إنها "تنتمي" لتيمها بتأدي أحسن بكتير من اللي بتحس إنها بس "بتشتغل هنا".',moral:'بنِ إحساس بالانتماء في تيمك. الناس مش بتشتغل لـ شركات، بتشتغل لـ أناس وأفكار.',goal:'هدف اليوم: اعمل حاجة بتثبت لكل واحد في التيم إنه مهم ومحتاج.'},
+{day:66,tag:'performance',title:'مبدأ الـ Deliberate Practice',story:'Anders Ericsson درس أساطير البيانو والشطرنج والرياضة. لاقى إن النجاح مش بيجي من "التمرين الاعتيادي" — بيجي من "التمرين المتعمد": ركيز على الضعف وخروج من منطقة الراحة بشكل مقصود.',moral:'الممارسة مش كافية. الممارسة المتعمدة على الضعف هي اللي بتطوّر.',goal:'هدف اليوم: حدد مهارة ضعيفة عند كل فرد في التيم وصمم تمرين عليها.'},
+{day:67,tag:'decision',title:'The 2-Minute Rule',story:'David Allen في كتاب Getting Things Done قال: لو الحاجة بتاخد أقل من دقيقتين، اعملها دلوقتي. التأجيل نفسه بياخد وقت ذهني أكبر من الفعل.',moral:'خلص الحاجات الصغيرة على طول. التأجيل وهم إنك بتوفر وقت.',goal:'هدف اليوم: خد أول 3 حاجات على قايمتك بتاخد أقل من دقيقتين واعملها دلوقتي.'},
+{day:68,tag:'communication',title:'Framing Effect — تأثير الإطار',story:'تجربة: قالوا لمجموعة "هذا الدواء نجاحه 90%" وقالوا لتانية "هذا الدواء فشله 10%". المعلومة نفسها — بس المجموعة الأولى اختارته أكتر. الـ framing بيغير القرارات.',moral:'الطريقة اللي بتقدم بيها المعلومة أحياناً أهم من المعلومة نفسها.',goal:'هدف اليوم: لما تقدم حاجة صعبة للتيم، فكر: إزاي أعيد تأطيرها بشكل أكتر إيجابية وصدق؟'},
+{day:69,tag:'mindset',title:'مبدأ الـ Kaizen — التحسين المستمر',story:'في اليابان بعد الحرب العالمية التانية، شركة Toyota بنت فلسفة Kaizen: كل يوم كل شخص يبحث عن تحسين صغير. النتيجة؟ Toyota بقت من أفضل شركات السيارات في العالم.',moral:'الكمال مش هدف — التحسين المستمر هو الهدف. دايماً فيه حاجة أحسن.',goal:'هدف اليوم: اسأل كل فرد في التيم: "إيه الحاجة الواحدة اللي ممكن تتحسن في شغلك النهارده؟"'},
+{day:70,tag:'performance',title:'مبدأ الـ Systems Thinking',story:'Peter Senge في كتاب The Fifth Discipline قال إن الـ TL اللي بيفكر في الـ systems مش بس الـ events هو اللي بيحل المشاكل من الجذور. كتير من المشاكل مش ف الناس — ف الـ system اللي بيشتغلوا فيه.',moral:'قبل ما تلوم ناس، ابحث عن العيب في الـ system. غالباً الـ system هو المشكلة.',goal:'هدف اليوم: خد مشكلة متكررة في التيم وسأل: هل المشكلة في الناس ولا في الـ process؟'},
+{day:71,tag:'culture',title:'قوة الـ Rituals في بداية الاجتماعات',story:'فرق عالية الأداء لاقوا إن أول 5 دقايق في الاجتماع بتحدد 80% من طاقة الاجتماع كله. فرق بتبدأ بنكتة، بحمد، أو بسؤال "إيه أحسن حاجة حصلت معاك النهارده؟" بتيجي بنتايج أفضل.',moral:'صمم بداية اجتماعاتك بعناية. أول 5 دقايق بتحدد الـ tone للساعة الجاية.',goal:'هدف اليوم: صمم opening ritual لاجتماعاتك من النهارده.'},
+{day:72,tag:'mindset',title:'Duality of Thinking — التفكير الثنائي',story:'F. Scott Fitzgerald قال: "علامة العقل المتطور هي القدرة على الإمساك بفكرتين متعارضتين في الوقت نفسه مع الاحتفاظ بالقدرة على العمل". القائد الجيد بيقدر يكون متفائل ومتشكك في نفس الوقت.',moral:'الـ AND أقوى من الـ OR. "نعم الوضع صعب، AND إحنا قادرين نكمل."',goal:'هدف اليوم: لما تواجه تحدي، استبدل "إما/أو" بـ "و" في تفكيرك.'},
+{day:73,tag:'performance',title:'مبدأ الـ Input vs Output Goals',story:'خبراء التطوير بيفرقوا بين هدف النتيجة (Output Goal): "هنكسب 100 عميل" وهدف العملية (Input Goal): "هنعمل 20 مكالمة يومياً". المشكلة إن النتيجة مش دايماً في إيدك — العملية في إيدك.',moral:'ركّز التيم على Input Goals اللي في إيدهم، مش بس على النتايج اللي مش في إيدهم كلها.',goal:'هدف اليوم: لكل هدف نتايج عند التيم، حدد الـ Input Goal المقابل.'},
+{day:74,tag:'decision',title:'Regret Minimization Framework',story:'Jeff Bezos لما كان بيقرر يترك وظيفته ويبنى Amazon، سأل نفسه: "لو كنت في الـ 80 من عمري وفكرت في القرار ده، هل هتندم لو ما عملتوش؟" الإجابة كانت نعم — فعمله.',moral:'الندم الأكبر مش على اللي عملته — على اللي كان ممكن تعمله وما عملتيش.',goal:'هدف اليوم: فيه حاجة بتؤجلها وتعرف إنك هتندم لو ما عملتهاش؟ اعملها.'},
+{day:75,tag:'communication',title:'مبدأ الـ Radical Transparency',story:'Ray Dalio أسس Bridgewater وبنى ثقافة Radical Transparency: كل حاجة بتتقال في العلن، كل قرار بيتشرح، كل feedback بتكون صريحة. الفكرة تبدو صعبة بس أثبتت نتايج ضخمة.',moral:'الشفافية تبني ثقة وتقضي على السياسات والشائعات. كن صريح حتى لو صعب.',goal:'هدف اليوم: شارك مع تيمك قرار أو تحدي كنت بتحتفظ بيه لنفسك.'},
+{day:76,tag:'mindset',title:'The Obstacle Is The Way',story:'ماركوس أوريليوس كتب: "العقبة في الطريق هي الطريق". ريان هوليداي بنى كتاب كامل على الفكرة دي. كل مشكلة بتواجهها هي فرصة لإثبات قدرتك.',moral:'حوّل عقلية التيم: المشكلة مش معيقة — هي الفرصة بعينها.',goal:'هدف اليوم: خد أكبر مشكلة في التيم وسأل: إيه الفرصة المختبية في المشكلة دي؟'},
+{day:77,tag:'culture',title:'مفهوم الـ Collective Intelligence',story:'بحث من MIT لاقى إن ذكاء الفريق الجماعي مش بيتحدد بأذكى فرد فيه — بيتحدد بمدى قدرتهم على التواصل وسماع بعض. الفرق اللي عندها "social sensitivity" عالية بتحل مشاكل أصعب.',moral:'الذكاء الجماعي أقوى من الذكاء الفردي لو التواصل صح.',goal:'هدف اليوم: في الاجتماع الجاي، تأكد إن كل صوت اتسمع قبل ما تاخد قرار.'},
+{day:78,tag:'performance',title:'مبدأ الـ Active Recall',story:'بدل مراجعة المعلومة بالقراءة، الـ Active Recall بيقول: اقفل الكتاب وحاول تتذكر. هذه الطريقة أثبتت تحسين الاحتفاظ بالمعلومات بـ 50%. المبدأ ينطبق على التدريب في الشغل.',moral:'لما تدرّب التيم، مش بس تشرح — اسأل وخليهم يتذكروا. ده اللي بيثبت المعلومة.',goal:'هدف اليوم: بعد أي تدريب أو شرح، اسأل التيم يلخصوا اللي اتعلموه بكلامهم هم.'},
+{day:79,tag:'mindset',title:'قانون الـ Reciprocity',story:'Robert Cialdini في كتاب Influence أثبت إن الناس بطبيعتها عايزة ترد الجميل. لما بتعطي حاجة للناس — اهتمام، مساعدة، معرفة — بيحسوا بدافع داخلي يردوا بنفس القدر.',moral:'أعطِ أولاً. المانجر اللي بيعطي تيمه بيجد تيمه بيعطيه تلقائياً.',goal:'هدف اليوم: قدم لحد في تيمك مساعدة أو معلومة من غير ما تطلب حاجة بالمقابل.'},
+{day:80,tag:'performance',title:'مبدأ الـ 4DX',story:'Sean Covey طور الـ 4 Disciplines of Execution: 1) ركّز على الأهم، 2) اشتغل على المقاييس التأثيرية، 3) اعمل لوحة تتبع واضحة، 4) عمل اجتماعات محاسبة أسبوعية. الـ 4DX خلّت شركات تتحول.',moral:'التنفيذ من غير نظام هو مجرد أمل. نظّم تنفيذك بالـ 4DX.',goal:'هدف اليوم: طبّق مبدأ الـ Scoreboard — اعمل لوحة واضحة بتتبع فيها هدف واحد مهم.'},
+{day:81,tag:'communication',title:'مفهوم الـ Meta-Communication',story:'أحياناً المشكلة مش في موضوع الكلام — المشكلة في طريقة الكلام نفسها. Meta-Communication يعني تتكلم عن طريقة التواصل. "أنا لاحظ إن احنا كلما اتكلمنا عن الموضوع ده بيحصل توتر — نتكلم عن كدا؟"',moral:'أحياناً لازم تقف وتتكلم عن طريقة التواصل قبل ما تكمل في الموضوع.',goal:'هدف اليوم: لو فيه ديناميكية صعبة في التيم، افتح الموضوع بصراحة.'},
+{day:82,tag:'mindset',title:'The Subtle Art of Not Giving a F*ck',story:'Mark Manson بيقول مش "ما بالكيش بأي حاجة" — بيقول "اختار بعناية بإيه هتبالي". الـ TL اللي بيبالي بكل حاجة بيخسر طاقته. اختيار معاركك ذكاء مش استسلام.',moral:'مش كل مشكلة تستحق طاقتك. اختر بعناية إيه اللي يستحق جهدك وجهد التيم.',goal:'هدف اليوم: قائمة التاسكات بتاعتك — إيه اللي يستحق طاقتك وإيه اللي مش يستحق؟'},
+{day:83,tag:'culture',title:'Celebrate Failures Forward',story:'شركة زي 3M، اللي اخترعت الـ Post-It Notes، بنيتها على فكرة فاشلة كانت المفروض تكون لاصق قوي. مش كل فشل نهاية — أحياناً الفشل بيفتح باب لأعظم الأفكار.',moral:'تيم بيحتفل بالفشل الذكي بيجرب أكتر ويبتكر أكتر من تيم بيخاف من الفشل.',goal:'هدف اليوم: اسأل التيم: "إيه أذكى فشل عملناه هذا الشهر وإيه اللي اتعلمناه؟"'},
+{day:84,tag:'performance',title:'The 5-Hour Rule',story:'Benjamin Franklin كان بيخصص ساعة يومياً للقراءة والتعلم المتعمد. Michael Simmons بحث ولاقى إن أنجح القادة في العالم — من Bill Gates لـ Oprah — بيطبقوا قاعدة الـ 5 ساعات أسبوعياً للتعلم.',moral:'التعلم المستمر مش luxury — هو investment في قدرتك على القيادة.',goal:'هدف اليوم: حدد 30 دقيقة يومية للتعلم وخلي التيم يعمل نفس الحاجة.'},
+{day:85,tag:'decision',title:'مبدأ الـ Reversibility',story:'Jeff Bezos يصنف القرارات لنوعين: قرارات "باب في اتجاه واحد" (ما ترجعش) وقرارات "باب في اتجاهين" (تقدر ترجع). الأول بياخد وقت أطول في التفكير، التاني بياخد قرار سريع.',moral:'مش كل القرارات تستحق نفس الوقت. افرق بين اللي يرجعه واللي ما يرجعش.',goal:'هدف اليوم: صنّف قرار أمامك — reversible ولا لأ؟ وخذه على حسب التصنيف.'},
+{day:86,tag:'communication',title:'قوة الـ Public Commitment',story:'بحث نفسي أثبت إن الناس لما بتعلن عن هدف في العلن بتلتزم بيه بنسبة أعلى بكتير من لما بيحتفظوا بيه لنفسهم. العلن بيخلق accountability اجتماعي قوي.',moral:'خلي الـ commitments في التيم علنية. "هعمل X بحلول Y" في وجود الكل أقوى من وعد خاص.',goal:'هدف اليوم: في الاجتماع الجاي، كل واحد يعلن commitment واحدة للأسبوع الجاي.'},
+{day:87,tag:'mindset',title:'مفهوم الـ Compounding في العلاقات',story:'وارن بافيت بيتكلم عن الـ Compounding في الاستثمار — بس المبدأ ينطبق على العلاقات. اهتمام صغير كل يوم بالناس اللي تحتك بيبني رصيد ثقة ضخم على مدار الوقت.',moral:'العلاقات بتبنى بتصرفات صغيرة متراكمة. كل واحدة منهم تبدو صغيرة بس الكل عظيم.',goal:'هدف اليوم: اعمل حاجة صغيرة تعبّر عن اهتمامك بكل فرد في تيمك — ولو رسالة قصيرة.'},
+{day:88,tag:'performance',title:'مبدأ الـ Zone of Proximal Development',story:'Vygotsky، عالم نفس روسي، اكتشف إن الناس بتتعلم أحسن في "منطقة النمو القريبة" — يعني اللي أصعب شوية من مستواهم الحالي بس مش مستحيل. ده بيتطلب مساعدة من حد أعلى منهم.',moral:'مهمة الـ TL يشتغل في الـ ZPD مع كل فرد — بيدي تحديات بتتمدد مش بتكسر.',goal:'هدف اليوم: ادي كل واحد في التيم تحدي أكبر شوية من مستواه بدعم منك.'},
+{day:89,tag:'culture',title:'مفهوم الـ Legacy Thinking',story:'Howard Gardner درس قادة عظام ولاقى إنهم كلهم بيفكروا في الـ Legacy: إيه اللي هيخلفوه بعدهم؟ ده مش غرور — ده وضوح في الهدف والأثر.',moral:'سأل نفسك: لو سبت التيم ده بكره، إيه اللي هيفضل بعدي؟ الإجابة دي بتحدد قراراتك النهارده.',goal:'هدف اليوم: اكتب 3 حاجات عايز تيمك يتعلمها منك وتفضل بعدك.'},
+{day:90,tag:'mindset',title:'اليوم الـ 90 — إنت مش نفس الشخص',story:'Heraclitus قال: "لا تستطيع أن تنزل في نفس النهر مرتين". إنت في اليوم 90 مش نفس الشخص اللي بدأ في اليوم 1 — ولا التيم هو نفسه. 90 يوم من المعرفة والتطبيق بتغيّر.',moral:'التغيير الحقيقي بطيء وغير مرئي يوم بيوم، بس ظاهر لما بتنظر للخلف. احتفل بالرحلة كلها.',goal:'هدف اليوم: اجمع التيم واحتفلوا. شاركوا أكبر 3 تغييرات شايفينها في نفسكم.'},
+],
+ag:[
+{day:1,tag:'mindset',title:'إنت أكتر من مجرد "موظف"',story:'سمير كان شايف إن شغله مجرد "رد على كالز وخلص". يوم المانجر قاله: "إنت مش بتعمل كالز — إنت بتحل مشاكل ناس حقيقية في حياتهم". من بعدها أسلوب سمير اتغير.',moral:'الفرق بين اللي بيشتغل "بالأجر" واللي بيشتغل "بالمعنى" كبير جداً في الـ performance. اشتغل بمعنى.',goal:'هدف اليوم: افتكر واحدة من أفضل المواقف اللي ساعدت فيها حد وتذكر الإحساس ده.'},
+{day:2,tag:'communication',title:'مهارة الإنصات الحقيقي',story:'إيمان كانت بتسمع الكلايت وهي بتفكر في الرد اللي هتقوله. يوم واحد قررت تسمع بس. اكتشفت إن الكلايت كان بيقول 3 مشاكل مختلفة من الأول — وكانت بترد على مشكلة غلط.',moral:'الاستماع الحقيقي بيبدأ لما تكفي عن التفكير في ردك وتركز على اللي بيتقال.',goal:'هدف اليوم: في أول محادثة، استمع للنهاية قبل ما تفكر في الرد.'},
+{day:3,tag:'performance',title:'مبدأ First Call Resolution',story:'دراسة لاقت إن 67% من الكلاينتس مش بيرجعوا لو مشكلتهم اتحلت من أول مرة. FCR مش بس بيوفر وقت — بيبني ثقة.',moral:'هدفك في كل محادثة: حل المشكلة من أول مرة. مش تعيد تحويل أو تقول "هترجعلك".', goal:'هدف اليوم: في كل كالز، اسأل نفسك: "إيه اللي محتاجه الشخص ده بالظبط عشان يكون راضي؟"'},
+{day:4,tag:'communication',title:'قوة اللهجة والإيقاع في الكلام',story:'بحث UCLA لاقى إن 55% من التأثير في الكلام بيجي من الـ Body Language، 38% من اللهجة، وبس 7% من الكلام نفسه. على التليفون: اللهجة بتاخد 93% من التأثير.',moral:'الكلام الصح باللهجة الغلط مش بيوصل. راقب صوتك، سرعتك، وطاقتك.', goal:'هدف اليوم: سجّل نفسك في محادثة واسمع لهجتك. هتلاحظ حاجات ما كنتش تعرفها.'},
+{day:5,tag:'mindset',title:'العقلية الإيجابية تحت الضغط',story:'مفيش Agent مش بيعدّي بكلايت صعب. السؤال مش "هيحصل ولا لأ" السؤال "هتتعامل معه إزاي؟" الـ Agent الشاطر اللي بيدخل كل محادثة بـ clean slate.',moral:'الضغط جزء من الشغل — ردة فعلك عليه هي اللي بتميزك.', goal:'هدف اليوم: لو جالك كلايت صعب، خد نفس واذكر نفسك: "ده مش عليّ شخصياً."'},
+{day:6,tag:'performance',title:'مبدأ الـ Active Problem Solving',story:'كلايت اتصل بمشكلة. الـ Agent بقى بيقول "مش في إيدي" وبيحول. TL لاحظ إن كتير من المشاكل دي كان فيها حل Agent تاني اتخد قبل كدا. عمل Knowledge Base.',moral:'الحل اللي حليته الأول يوم بيصبح أداة لحل نفس المشكلة بكره أسرع.', goal:'هدف اليوم: لو حليت مشكلة غير معتادة، اكتبها ومشاركها مع التيم.'},
+{day:7,tag:'communication',title:'التحكم في الـ Tone لما يكون الكلايت زعلان',story:'لما كلايت بيصرخ، أغلب الـ agents بيرفعوا صوتهم أو بيدفعوا الدفاع. الأسلوب الصح هو العكس: صوت أهدى، إيقاع أبطأ. ده بيستدرج الكلايت ياخد نفس.',moral:'أهدأ صوت في الأوضة بيتحكم في باقي الأوضة. إنت أهدى صوت.',goal:'هدف اليوم: لما حد بيتكلم بعصبية، خفض صوتك شوية بدل ما ترفعه.'},
+{day:8,tag:'mindset',title:'Growth Mindset في الشغل اليومي',story:'أحمد كان بيحس إنه "مش موهوب للـ sales". يوم سمع إن المهارة مش ثابتة — بتتطور. قرر يتعلم أسلوب جديد كل أسبوع. في 3 شهور، بقى من أعلى أداء في التيم.',moral:'المهارة مش هبة — هي ممارسة. الناس اللي بتتطور بتؤمن إنها ممكن.',goal:'هدف اليوم: حدد مهارة واحدة عايز تطورها وابحث عن مصدر واحد تتعلم منه.'},
+{day:9,tag:'performance',title:'مبدأ الـ Empathy Map',story:'فريق اتدرب على إنهم يتخيلوا هم الكلايت قبل أي محادثة: "بيفكر في إيه؟ بيحس بإيه؟ خايف من إيه؟" الأداء اتحسن بشكل ملحوظ لأنهم بدأوا يتكلموا بلغة الكلايت مش لغتهم.',moral:'الـ Empathy مش شعور — مهارة بتتعلمها وبتتدرب عليها.',goal:'هدف اليوم: قبل أي محادثة صعبة، اسأل نفسك: "ده الشخص ده حاسس بإيه دلوقتي؟"'},
+{day:10,tag:'communication',title:'فن إدارة التوقعات',story:'أكتر حاجة بتعصب الكلايت مش المشكلة — هو إنهم ما كانوش عارفين هتاخد وقت أد كدا. لما بتقول "هيتحل في 24 ساعة" بدل "بأسرع وقت"، الكلايت بيبقى أكثر صبراً.',moral:'الوضوح في التوقعات أحسن من وعد غامض. كن محدداً حتى لو الوقت أطول.',goal:'هدف اليوم: في كل محادثة، حدد وقت واضح بدل "قريباً" أو "بأسرع وقت".'},
+{day:11,tag:'mindset',title:'قوة الـ Gratitude في الشغل',story:'بحث من UC Davis أثبت إن الناس اللي بتكتب 3 حاجات بتشكر عليها كل يوم بتكون أسعد وأكثر إنتاجاً في الشغل. حتى لو الشغل صعب.',moral:'التركيز على اللي كويس مش تجاهل للتحديات — هو وقود ذهني إضافي.',goal:'هدف اليوم: اكتب 3 حاجات بتشكر عليها في شغلك النهارده.'},
+{day:12,tag:'performance',title:'مبدأ الـ Chunking',story:'الذاكرة البشرية بتتعامل مع المعلومات في "chunks" — مجموعات. لذلك رقم التليفون متقسم بـ شرطات. عمليات الـ agent المعقدة لو اتعلمتها كـ chunks صغيرة بتتذكرها وبتطبقها أسرع.',moral:'لما تتعلم حاجة جديدة، قسّمها لـ 3-4 خطوات رئيسية. ده بيسهل التطبيق.',goal:'هدف اليوم: خد أي عملية بتعملها وقسّمها لخطوات مكتوبة — حتى لو عارفها.'},
+{day:13,tag:'communication',title:'مبدأ الـ Mirroring في المحادثة',story:'Agent اتعلم إنه يكرر آخر كلمتين قالهم الكلايت كتأكيد. بدل "أيوه فاهمك"، قال "فاهمك تماماً — قلت إن الفاتورة جه ضعف؟" الكلايت حس إنه متسمع وفاح في الكلام.',moral:'التأكيد المحدد أقوى من التأكيد العام. اعكس اللي قاله بكلمات محددة.',goal:'هدف اليوم: جرب تعيد آخر فكرة قالها الكلايت بكلماتك.'},
+{day:14,tag:'mindset',title:'مبدأ الـ Locus of Control',story:'Julian Rotter اكتشف إن الناس نوعين: اللي بيحس إن حياته في إيده (Internal) واللي بيحس إنها في إيد الظروف (External). الأول دايماً أكتر تطور وأقل إجهاد نفسي.',moral:'تبنّ العقلية الـ Internal: "إيه اللي في إيدي أعمله؟" حتى لو الظروف مش في إيدك.',goal:'هدف اليوم: لو فيه موقف صعب في شغلك، اسأل: "إيه اللي في إيدي فعلاً أغيره؟"'},
+{day:15,tag:'performance',title:'مبدأ الـ Quality Check على نفسك',story:'Agent ناجح بيقيّم نفسه بعد كل محادثة صعبة بـ 3 أسئلة: حليت المشكلة؟ الكلايت خرج راضي؟ عملت أحسن اللي عندي؟ الـ Self-Assessment دي بتسرع التطور جداً.',moral:'ما تستنيش حد يقيّمك. الـ Self-Assessment المستمر هو أسرع طريق للتطور.',goal:'هدف اليوم: بعد كل محادثة صعبة، سأل نفسك الـ 3 أسئلة دول.'},
+{day:16,tag:'communication',title:'إدارة المكالمة من البداية',story:'أول 30 ثانية في أي مكالمة بتحدد باقيها. Agent تعلم إنه بيسيطر على الـ opening: اسمه، الشركة، المساعدة الفورية، واستعداده. الكلايت حس باحترافية من الأول.',moral:'الأولى انطباع مش بيتعوض. صمم الـ 30 ثانية الأولى بعناية.',goal:'هدف اليوم: صمم فتح مكالمة احترافي لنفسك وجرّبه اليوم.'},
+{day:17,tag:'mindset',title:'مبدأ الـ Self-Compassion',story:'Kristin Neff أثبتت إن الناس اللي بتعامل نفسها برحمة بعد الأخطاء بتتعلم منها أسرع وما بتكررهاش. الانتقاد الذاتي القاسي بيأثر سلباً على الأداء.',moral:'بعد الغلطة: اعترف بيها، تعلم منها، واتقدم. مش تعاقب نفسك.',goal:'هدف اليوم: لو غلطت في حاجة النهارده، قول لنفسك: "اتعلمت حاجة — وكده."'},
+{day:18,tag:'performance',title:'أهمية الـ Product Knowledge',story:'Agent كان بيرد على كل سؤال بـ "هرجع أتأكد". TL لاحظ إن نفس الأسئلة بتتكرر. عمل ورقة بـ TOP 20 Questions مع إجاباتها. وقت الـ Average Handle Time نقص 30%.',moral:'المعرفة = قوة = ثقة = رضا الكلايت. اعرف منتجك أو خدمتك كويس.',goal:'هدف اليوم: حدد أكتر 5 أسئلة بتتكرر عندك واتأكد إنك عارف إجاباتها عن ظهر قلب.'},
+{day:19,tag:'communication',title:'مهارة الـ Reframing',story:'كلايت قال "انتوا فاشلين". Agent ما ردش بدفاع. قال: "أنا عايز أفهم بالظبط إيه اللي حصل عشان أعمل كل اللي في إيدي." حوّل الهجوم لمحادثة بنّاءة.',moral:'الـ Reframing مهارة قوية: حوّل الهجوم لفرصة للحل.',goal:'هدف اليوم: لو كلايت هاجمك، حوّل الموضوع لـ "ساعدني أفهم إيه اللي حصل بالظبط."'},
+{day:20,tag:'mindset',title:'مبدأ الـ Present Moment Awareness',story:'Jon Kabat-Zinn أثبت إن الـ Mindfulness بيخفف الإجهاد ويزود التركيز. Agent في بيئة كالز سنتر بيكون وسط ضوضاء وضغط. التركيز في اللحظة الحالية بيحمي من الإرهاق.',moral:'كل مكالمة هي عالم لوحدها. مش مكالمة 50 — مكالمة 1 في كل مرة.',goal:'هدف اليوم: بين كل مكالمة وتانية، خد 3 أنفاس عميقة وصفّي دماغك.'},
+{day:21,tag:'performance',title:'مبدأ الـ Closing — إغلاق المحادثة صح',story:'80% من الـ agents بيلاقوا صعوبة في الـ Closing. Agent ناجح اتعلم نموذج بسيط: "بعد اللي اتفقنا عليه، هل فيه حاجة تانية ممكن أساعدك فيها؟" وبعدين شكر حقيقي.',moral:'الخاتمة الكويسة بتترك أثر. مش بس "مع السلامة" — بتكون لحظة connection أخيرة.',goal:'هدف اليوم: صمم closing لمحادثاتك بيأكد الحل ويفتح الباب لأي استفسار تاني.'},
+{day:22,tag:'communication',title:'مهارة التعامل مع الصمت',story:'كتير من الـ agents بيحسوا بعدم الارتياح من الصمت وبيملوه بكلام زيادة. الصمت أحياناً بيدي الكلايت وقت يفكر ويوصل لقرار. اتعلم تصمت بثقة.',moral:'الصمت في المحادثة مش فراغ — هو مساحة للتفكير والقرار.',goal:'هدف اليوم: بعد ما تعرض حل، صمت واستنى الكلايت يرد من غير ما تملأ الصمت.'},
+{day:23,tag:'mindset',title:'قانون الـ 10,000 ساعة',story:'Malcolm Gladwell كتب في Outliers إن أي مهارة لو تمرنت عليها 10,000 ساعة بتبقى خبير. كل مكالمة بتعملها هي خطوة في الـ 10,000 ساعة.',moral:'مفيش طريق سريع للخبرة. كل مكالمة درس وكل يوم تراكم.',goal:'هدف اليوم: فكر في كل مكالمة صعبة إنها جزء من تدريبك لتبقى خبير.'},
+{day:24,tag:'performance',title:'مبدأ الـ Root Cause Analysis',story:'كلايت اتصل بنفس المشكلة 3 مرات. الـ agents في كل مرة بيحلوا الـ symptom مش المشكلة الأساسية. لما واحد سأل "إيه السبب الجذري؟" حل المشكلة من المرة الأولى للأبد.',moral:'حل الـ symptom وقتي. حل الـ root cause نهائي.',goal:'هدف اليوم: في مشكلة متكررة، سأل نفسك: "ليه بتحصل؟" 5 مرات للوصول للسبب الحقيقي.'},
+{day:25,tag:'communication',title:'مهارة الـ Positive Language',story:'دراسة في مراكز الخدمة لاقت إن تغيير صياغة الكلام من سلبي لإيجابي بيزود رضا الكلايت. بدل "مش قادرين يوم الجمعة" قول "أقدر أساعدك يوم السبت كويس؟"',moral:'الكلام السلبي يغلق الباب. الكلام الإيجابي يفتح فرصة.',goal:'هدف اليوم: حول 3 جمل سلبية في محادثاتك لإيجابية ولاحظ الفرق.'},
+{day:26,tag:'mindset',title:'مفهوم الـ Resilience — المرونة',story:'بحث على أكثر الـ agents تميزاً لاقى حاجة مشتركة: مش كانوا أذكى — كانوا الأقدر على التعافي من المحادثات الصعبة بسرعة. الـ Resilience مهارة بتتعلم.',moral:'القدرة على "الإعادة" بعد الضغط أهم من القدرة على "التحمل".',goal:'هدف اليوم: بعد مكالمة صعبة، اعمل حاجة بتجيبلك طاقة — ولو قعدة 5 دقايق.'},
+{day:27,tag:'performance',title:'مبدأ الـ Time on Task',story:'دراسة لاقت إن الـ agents اللي بتحسن أداؤهم مش بيشتغلوا أوقات أطول — بيكونوا أكثر تركيزاً في الوقت اللي بيشتغلوه. الجودة أهم من الكمية.',moral:'حضورك الكامل في كل مكالمة أهم من عدد المكالمات.',goal:'هدف اليوم: في كل مكالمة، أغلق أي تاب تاني وكن حاضر 100%.'},
+{day:28,tag:'communication',title:'فن الاعتذار المهني',story:'كلايت زعلان. Agent قال "أنا آسف إنك حسيت بكدا" بدل "أنا آسف على الغلطة". الأولى بتعترف بالتجربة وبتبني connection. التانية بتعترف بالخطأ. الاتنين ليهم وقتهم.',moral:'الاعتذار الصادق بيبني علاقة. اعرف الفرق بين الاعتذار عن التجربة والاعتذار عن الغلطة.',goal:'هدف اليوم: لما حد زعلان، اعترف بمشاعره أول قبل ما تحل المشكلة.'},
+{day:29,tag:'mindset',title:'مبدأ الـ Kaizen الشخصي',story:'Agent قرر كل يوم يحسن حاجة صغيرة واحدة: يوم يحسن الـ opening، يوم يحسن الـ closing، يوم يحسن لهجته. بعد 3 شهور، كان أداؤه اتغير بشكل يلفت الانتباه.',moral:'التحسين اليومي الصغير أقوى من التطوير الضخم النادر.',goal:'هدف اليوم: حدد حاجة واحدة في أسلوبك هتحسنها النهارده بس.'},
+{day:30,tag:'culture',title:'إنت جزء من فريق — مش لحالك',story:'Vince Lombardi، أسطورة كرة القدم الأمريكية قال: "الإنجازات الفردية لا معنى لها إذا كان الفريق يخسر." أعلى الـ agents أداءً بيعرفوا إنهم بيفوزوا لما التيم بيفوز.',moral:'نجاحك جزء من نجاح التيم. ساعد زمايلك ينجحوا يساعدوك تنجح.',goal:'هدف اليوم: ساعد زميل يحل مشكلة كانت صعبة عليه.'},
+],
+ag2:[
+{day:31,tag:'performance',title:'مبدأ الـ Personalization',story:'Agent بدأ يستخدم اسم الكلايت 3 مرات في المكالمة بشكل طبيعي. بعد شهر، الـ Customer Satisfaction Score بتاعه ارتفع بشكل واضح. حاجة صغيرة — تأثير كبير.',moral:'الاسم هو أحلى كلمة للإنسان. استخدمه بصدق.',goal:'هدف اليوم: في كل مكالمة، استخدم اسم الكلايت 2-3 مرات بشكل طبيعي.'},
+{day:32,tag:'mindset',title:'مبدأ الـ Ownership',story:'كلايت اتصل بمشكلة. الـ agent الأول قاله "مش قسمي". الـ agent التاني قال "أنا هتابع معك لحد ما تتحل". الكلايت رجع لنفس الشركة بعد المشكلة لأن واحد "أخد ملكية" المشكلة.',moral:'خد ملكية مشاكل الكلايت حتى لو الحل في قسم تاني.',goal:'هدف اليوم: في كل مشكلة، قول "أنا هتابع" بدل "مش قسمي".'},
+{day:33,tag:'communication',title:'مهارة الـ Summarizing',story:'في نهاية كل محادثة، agent بدأ يلخص: "بالتالي اتفقنا على... وهيحصل في... صح؟" الكلايت بيبقى متأكد والـ agent بيبقى متأكد — مفيش سوء فهم.',moral:'التلخيص بيمنع سوء الفهم ويحمي الاتنين.',goal:'هدف اليوم: خلص كل محادثة بتلخيص سريع لما اتفقوا عليه.'},
+{day:34,tag:'mindset',title:'قوة الـ Visualization',story:'رياضيون أوليمبيون بيتخيلوا الأداء المثالي قبل المنافسة. Agent بدأ يتخيل كل مكالمة ناجحة قبل ما يردّ. بعد شهر، الـ confidence بتاعه اتغيرت بشكل ملحوظ.',moral:'العقل ما بيفرقش بين ما تتخيله وما بيحصل فعلاً بشكل كامل. الـ visualization بيحضّرك.',goal:'هدف اليوم: قبل ما تبدأ شيفت، تخيل 3 مكالمات ناجحة في دماغك.'},
+{day:35,tag:'performance',title:'مبدأ الـ Handle Time vs Quality',story:'فيه توازن لازم يتحقق: مش سريع جداً فالجودة بتتضار، ومش بطيء جداً فالـ Queue بيتراكم. أفضل الـ agents بيعرفوا يحلوا "بشكل كامل وبوقت معقول".',moral:'السرعة والجودة مش ضدين — الاتنين ممكن مع بعض بالتدريب.',goal:'هدف اليوم: ارسم لنفسك تعريف واضح لـ "مكالمة ناجحة في وقت معقول".'},
+{day:36,tag:'communication',title:'التعامل مع الكلايت الصامت',story:'مش كل الكلاينتس بيعبروا عن مشاعرهم. Agent اتعلم إن الصمت أنواع: صمت تفكير، صمت غضب، صمت ارتباك. وبدأ يتعامل مع كل نوع بأسلوب مختلف.',moral:'الصمت له معاني — تعلم تقرأه.',goal:'هدف اليوم: لما كلايت يسكت، قول: "تمام، خدلك وقتك — أنا هنا."'},
+{day:37,tag:'mindset',title:'مبدأ الـ Beginner\'s Mind في التعلم',story:'Agent بخبرة 3 سنين حضر تدريب زي الـ juniors. بدل ما يقول "أنا عارف ده"، جلس يسمع. اكتشف 3 techniques جديدة ما كانش يعرفها.',moral:'الخبرة نعمة لما بتخليك تتعلم أعمق. مشكلة لما بتخليك تحس إنك عارف كل حاجة.',goal:'هدف اليوم: في أي تدريب أو نقاش، ادخل بعقل المبتدئ.'},
+{day:38,tag:'performance',title:'مبدأ الـ Proactive Communication',story:'Agent لاحظ إن كلايت فيه تأخير في طلبه. بدل ما يستنى الكلايت يتصل، اتصل هو أول وأخبره بالوضع وبالـ Expected Time. الكلايت بدل ما يزعل — شكره.',moral:'الاتصال الاستباقي يمنع الشكاوى ويبني ثقة.',goal:'هدف اليوم: لو فيه كلايت هيأخر عليه حاجة، بادر وكلمه أنت الأول.'},
+{day:39,tag:'communication',title:'مهارة طرح الأسئلة الصح',story:'فرق بين "هل عندك مشكلة تانية؟" و"إيه التاني ممكن أساعد فيه النهارده؟" السؤال الأول closed, التاني open. الكلايت بيكشف أكتر مع الـ Open Questions.',moral:'الأسئلة المفتوحة بتفتح محادثات. المغلقة بتقفلها.',goal:'هدف اليوم: في كل محادثة، استخدم سؤال مفتوح واحد على الأقل.'},
+{day:40,tag:'mindset',title:'مبدأ الـ Intrinsic Motivation',story:'دراسة لاقت إن الناس اللي بتشتغل لأنهم "بيحبوا الشغل" بتأدي بشكل أفضل من اللي بيشتغلوا بس "عشان الراتب". الدافع الداخلي بيتولد لما بتحس بمعنى.',moral:'ابحث عن المعنى في شغلك — مش بس ابحث عن المكافأة.',goal:'هدف اليوم: اكتب 3 أسباب بتجعلك فخور بشغلك.'},
+{day:41,tag:'performance',title:'مهارة الـ Upselling الأخلاقي',story:'Upselling مش لازم يكون بيع قسري. Agent اتعلم يسأل: "بناءً على اللي قلته، عندنا خدمة بتوفر عليك كدا..." وبيقدم القيمة الحقيقية مش بيبيع. التحويلات ارتفعت لأن الكلايت حس بنصيحة مش بيع.',moral:'Upselling الصح هو حين بتقدم قيمة حقيقية. الكلايت بيحس الفرق.',goal:'هدف اليوم: لو عندك فرصة upsell، فكر: "ده بيفيد الكلايت فعلاً؟" أول.'},
+{day:42,tag:'culture',title:'مبدأ الـ Peer Learning',story:'التيم الأعلى أداءً في أي شركة بيتعلموا من بعض. Agent بدأ يسأل أعلى زميل أداء: "إيه اللي بتعمله مختلف؟" وبيطبق واحدة منها في الأسبوع.',moral:'المعلمين الأفضل أحياناً بيبقوا جنبك في نفس القاعة.',goal:'هدف اليوم: سأل أحسن agent في تيمك حاجة واحدة بيعملها مختلف.'},
+{day:43,tag:'mindset',title:'مبدأ الـ Radical Acceptance',story:'Marsha Linehan طورت مبدأ القبول الجذري: بعض الحاجات في الشغل هتبقى صعبة دايماً. قبول ده مش استسلام — هو تحرر من الغضب على حاجات ما بتتغيرش.',moral:'الغضب من اللي مش في إيدك بيحرق طاقتك. القبول بيوفر الطاقة للي في إيدك.',goal:'هدف اليوم: حدد حاجة في الشغل صعبة ومش في إيدك — وقرر تتعايش معها بدل ما تحاربها.'},
+{day:44,tag:'performance',title:'مبدأ الـ After Call Work — ACW',story:'الـ ACW اللي بيتعمل بعد الكالز مهم زي الكالز نفسه. Agent اتعلم يعمله بسرعة ودقة: ملاحظات واضحة، الحل المتخد، والـ follow-up المطلوب. ده وفّر وقت لنفسه وللتيم.',moral:'الـ documentation مش بيروقراطية — هي رسالة لنفسك في المستقبل.',goal:'هدف اليوم: حسّن الـ notes اللي بتكتبها بعد كل مكالمة — خليها واضحة ومفيدة.'},
+{day:45,tag:'mindset',title:'منتصف الرحلة للـ Agent',story:'في كأس العالم، الإحصاءات بتقول إن أكتر الأهداف بتتسجل في الـ 15 دقيقة الأخيرة — لأن الفرق اللي بتعرف تحافظ على الطاقة بيفوز. إنت في المنتصف — ازاي طاقتك؟',moral:'القدرة على الاستمرار بنفس الجودة مش موهبة — عادة بتتبنى.',goal:'هدف اليوم: قيّم طاقتك الآن: هل شغّال بنفس جودة أول يوم؟ وإيه اللي محتاجه؟'},
+{day:46,tag:'communication',title:'مهارة التعامل مع الرفض',story:'Sales agent سمع "لأ" مئة مرة. بدل ما يتأثر، سأل نفسه: "مش لأ لي — لأ للعرض ده في الوقت ده." وبدأ يسأل: "إيه اللي كان هيخليك تفكر؟" بدأ يتعلم ويتحسن.',moral:'الرفض معلومة، مش حكم عليك.',goal:'هدف اليوم: لو أي كلايت رفض، اسأل بهدوء: "إيه اللي كان هيفرق في قرارك؟"'},
+{day:47,tag:'mindset',title:'قوة الـ Habits',story:'William James قال إن 95% من أفعالنا اليومية عادات. Agent بنى عادات صغيرة: يراجع الـ script الصبح، ياخد نفس قبل كل مكالمة صعبة، يكتب ملاحظة واحدة بعد كل يوم. بعد شهر، الأداء اتحسن أوتوماتيك.',moral:'الـ habits بتشغّل نفسها. ابنِ العادات الصح وهي هتعمل الشغل.',goal:'هدف اليوم: حدد عادة مهنية واحدة عايز تبنيها وابدأ بيها النهارده.'},
+{day:48,tag:'performance',title:'مبدأ الـ Feedback Loop',story:'Agent طلب من التيم ليدر بتاعه يسمع مكالمة واحدة أسبوعياً ويدي ملاحظة. في 2 شهر، تطور بشكل لاحقه الكل.',moral:'الـ feedback المنتظم هو أسرع طريق للتطور. اطلبه مش بس استنى.',goal:'هدف اليوم: اطلب من مشرفك feedback على حاجة واحدة محددة.'},
+{day:49,tag:'communication',title:'مهارة الـ Pacing',story:'Pacing يعني إنك تتكيف مع إيقاع الشخص اللي بتتكلمه. الكلايت البطيء في الكلام محتاج agent ببطء وهدوء. الكلايت السريع محتاج agent يكون على نفس الإيقاع.',moral:'التكيف مع إيقاع الكلايت بيخليه يحس إنك "بتفهمه". ده بيبني rapport سريع.',goal:'هدف اليوم: لاحظ إيقاع كلام كل كلايت وحاول تتكيف معه.'},
+{day:50,tag:'mindset',title:'مبدأ الـ Long-term Thinking',story:'Agent شاف شغله كـ "مسار" مش "وظيفة". بدأ يسأل: "إيه اللي هتعلمه من الشغل ده ينفعني في 5 سنين؟" الـ mindset ده خلاه يستغل كل فرصة تدريب وكل محادثة صعبة.',moral:'كل مكالمة هي تدريب. كل تحدي هو فرصة. كل يوم هو استثمار.',goal:'هدف اليوم: فكر في مهارة واحدة هتتعلمها من شغلك النهارده تنفعك في مستقبلك.'},
+{day:51,tag:'performance',title:'مهارة الـ Error Recovery',story:'الفرق بين الـ agent المبتدئ والمحترف مش إن المحترف ما بيغلطش — هو إنه بيتعافى بسرعة من الغلطة في وسط المكالمة. بيعترف، بيعتذر، وبيكمل بثقة.',moral:'الغلطة في المكالمة مش نهاية — طريقة تعافيك منها هي اللي بتحدد النتيجة.',goal:'هدف اليوم: لو غلطت في مكالمة، اعترف فوراً وكمّل بثقة.'},
+{day:52,tag:'communication',title:'مهارة قراءة الـ Emotional Cues',story:'Agent اتعلم يسمع مش بس الكلام — يسمع النبرة والسرعة والصمت. كلايت بيتكلم سريع ومتوتر = ضاغط عليه. كلايت بيتكلم ببطء وبصوت خافت = حزين أو محبط.',moral:'80% من التواصل مش في الكلام. اسمع ما بين الكلمات.',goal:'هدف اليوم: في محادثة، ركّز على النبرة مش بس المحتوى وحدد حالة الكلايت العاطفية.'},
+{day:53,tag:'mindset',title:'مبدأ الـ Incremental Confidence',story:'Confidence مش بتيجي من فراغ. بتيجي من تجميع "إثباتات" إنك تقدر. كل مكالمة صعبة اتجاوزتها هي إثبات. كل كلايت راضي هو إثبات. بنِ ملف الإثباتات ده في دماغك.',moral:'ذاكرتك مع الإنجازات أقوى من ذاكرتك مع الفشل. ابنِ الاتنين عمداً.',goal:'هدف اليوم: اكتب 3 مواقف نجحت فيها في الشغل وافتكر الإحساس.'},
+{day:54,tag:'performance',title:'مبدأ الـ Benchmarking الشخصي',story:'بدل مقارنة نفسه بزميله، agent بدأ يقارن نفسه بـ "نفسه الأسبوع اللي فات". سأل: "بعت أكتر؟ وقت التعامل أقل؟ رضا أعلى؟" التحسين بقى شخصي ومحدد.',moral:'أفضل منافسة هي مع نفسك أمس.',goal:'هدف اليوم: قارن أداؤك النهارده بأداؤك الأسبوع اللي فات في حاجة محددة.'},
+{day:55,tag:'communication',title:'مهارة الـ Chunking في الشرح',story:'كلايت سأل عن عملية معقدة. Agent حسس الإرهاق لما شرح كل حاجة مرة واحدة. اتعلم يشرح في 3 chunks: "الجزء الأول هو... واضح؟ تمام، الجزء التاني..."',moral:'المعلومة الكتير دفعة واحدة مش بتتذكر. قسّم وتأكد.',goal:'هدف اليوم: لو في شرح معقد، قسّمه لـ 3 أجزاء وتأكد بعد كل جزء.'},
+{day:56,tag:'mindset',title:'مبدأ الـ Mindful Responding',story:'Victor Frankl قال: "بين المحفز والاستجابة فيه مساحة". الـ agent المحترف بياخد لحظة صغيرة قبل الرد، حتى لو ثانية واحدة، عشان يختار الرد مش يتفاعل.',moral:'الرد المختار دايماً أفضل من الرد التلقائي.',goal:'هدف اليوم: قبل كل رد مهم، خد نفس واحد وارد باختيار.'},
+{day:57,tag:'performance',title:'مبدأ الـ Solution First',story:'Agent اتعلم إنه يعرض الحل أول قبل الشرح. بدل "المشكلة بسبب كذا وكذا وكذا لذلك..."، قال "الحل هو كذا — عايزني أشرح ليه؟" الكلايت بقى أكثر تقبلاً.',moral:'الناس بتريد الحل أول. الشرح بعدين لو طلبوه.',goal:'هدف اليوم: في كل مشكلة، ابدأ بالحل وبعدين اشرح لو الكلايت سأل.'},
+{day:58,tag:'communication',title:'مهارة الـ Vocal Variety',story:'Agent اتعلم إن صوت monotone (على نغمة واحدة) بيخلي الكلايت يحس بعدم الاهتمام. بدأ يغير: سرعة، نبرة، حماس في أماكن معينة. الـ engagement ارتفع.',moral:'صوتك أداة — استخدم تنوعه.',goal:'هدف اليوم: سجّل مكالمة وراجع: هل صوتك فيه تنوع ولا على نغمة واحدة؟'},
+{day:59,tag:'mindset',title:'مبدأ الـ Identity-Based Change',story:'James Clear بيقول التغيير الحقيقي مش بيبدأ من "عايز أعمل كدا" — بيبدأ من "أنا الشخص اللي بيعمل كدا". Agent قرر يقول لنفسه "أنا agent محترف" قبل ما يبدأ الشيفت.',moral:'هويتك بتحدد أفعالك. قرر مين إنت أول، والأفعال هتتبع.',goal:'هدف اليوم: اكتب جملة واحدة عن هويتك المهنية — "أنا agent اللي..."'},
+{day:60,tag:'culture',title:'نهاية الشهرين للـ Agent',story:'في الغوص، هناك مبدأ اسمه "Turn Around Rule" — لما تستهلك نص الأكسجين، ارجع. ده مش فشل — ده حكمة. في الشغل: اعرف متى تطلب مساعدة.',moral:'الـ agent الواعي يعرف حدوده ويطلب مساعدة في الوقت الصح.',goal:'هدف اليوم: حدد حاجة تحتاج فيها دعم من تيمك أو مشرفك — واطلبه.'},
+],
+ag3:[
+{day:61,tag:'performance',title:'مبدأ الـ Pattern Recognition',story:'Agent بعد 60 يوم بدأ يلاحظ patterns: نوع معين من الكلاينتس بيشتكي من نفس الحاجة، وقت معين في اليوم بيجي فيه ضغط. استخدم الـ patterns دي يجهز نفسه.',moral:'الخبرة = التعرف على الـ patterns. استخدمها.',goal:'هدف اليوم: حدد pattern واحد في شغلك وفكر في إيه اللي تعمله مختلف بسببه.'},
+{day:62,tag:'communication',title:'مهارة الـ Transition Language',story:'انتقال محادثة من موضوع لتاني من غير transition بيعمل confusion. Agent اتعلم جمل زي: "بناءً على ما قلته، خليني أسألك عن..." أو "قبل ما نكمل، عايز أتأكد من..."',moral:'الـ transitions الكلامية بتخلي المحادثة منظمة وسهلة للطرفين.',goal:'هدف اليوم: تعلم جملتين transition وجربهم النهارده.'},
+{day:63,tag:'mindset',title:'مبدأ الـ Equanimity',story:'Marcus Aurelius كتب في Meditations عن "الاتزان" — القدرة على البقاء ثابت سواء جاءت أخبار جيدة أو سيئة. الـ Agent الأكتر اتزاناً هو الأكتر ثقة.',moral:'الاتزان مش لامبالاة — هو قدرة على الاستمرار بنفس الجودة بغض النظر عن الظروف.',goal:'هدف اليوم: لاحظ لحظة فقدت فيها الاتزان النهارده وفكر: كان ممكن أتعامل معها إزاي؟'},
+{day:64,tag:'performance',title:'مبدأ الـ First Impression Effect',story:'دراسة لاقت إن الناس بتكوّن رأي في أول 7 ثواني. في المكالمات الصوتية، الصوت والأسلوب في أول 10 ثواني بيحدد مزاج المحادثة كلها.',moral:'الأول 10 ثواني = 60% من نجاح المكالمة. استثمر فيهم.',goal:'هدف اليوم: راجع فتح مكالمتك وحسّنه في حاجة واحدة.'},
+{day:65,tag:'communication',title:'مهارة الـ Back-Channeling',story:'"آه"، "تمام"، "أيوه" — دي Back Channels. بتقول للمتكلم "أنا مصحيك". لما بتكون على التليفون وبتسكت تماماً، الكلايت بيشك إنك معاه أصلاً.',moral:'الإشارات الصوتية الصغيرة بتقول "أنا هنا" بدون ما تقاطع.',goal:'هدف اليوم: استخدم Back Channels بشكل طبيعي في كل محادثة.'},
+{day:66,tag:'mindset',title:'قوة الـ Deliberate Rest',story:'Anders Ericsson لاحظ إن أفضل المحترفين بيشتغلوا 4-5 ساعات تركيز عالي وبعدين بياخدوا استراحة حقيقية. مش بيشتغلوا 12 ساعة "عادية".',moral:'الراحة المتعمدة جزء من الأداء العالي مش ضده.',goal:'هدف اليوم: خد استراحة حقيقية (من غير موبايل) بين الشيفتات.'},
+{day:67,tag:'performance',title:'مبدأ الـ Voice of the Customer',story:'أكبر فرصة تطوير في أي شركة مخبّاة في كلام الكلاينتس. Agent بدأ يسجّل ملاحظات عن أكتر الشكاوى المتكررة وبعتها للتيم ليدر. الـ feedback ده غيّر policy.',moral:'إنت أقرب حد للكلايت — صوتك بيمثلهم. ابعت الـ insights.',goal:'هدف اليوم: لو كلايت قال حاجة ممكن تتحسن، سجّلها وشاركها مع التيم ليدر.'},
+{day:68,tag:'communication',title:'مهارة الـ Hedging Language',story:'"سيتم" أو "من المحتمل" أو "في الغالب" — دي Hedging Language. بتقيّد الوعود وتمنع توقعات زيادة عن اللازم. Agent اتعلم الفرق بين "هيوصل بكرة" (وعد) و"المتوقع خلال 24-48 ساعة" (تحفظ).',moral:'الدقة في الكلام تحميك وتحمي الكلايت من خيبة الأمل.',goal:'هدف اليوم: راجع الوعود اللي بتديها ودقّقها بحيث تكون قادر تفي بيها.'},
+{day:69,tag:'mindset',title:'مبدأ الـ Introspection',story:'Socrates قال "الحياة غير المفحوصة لا تستحق أن تُعاش". Agent بدأ يكتب كل أسبوع: "إيه اللي عملته كويس؟ إيه اللي هحسّنه؟ إيه اللي اتعلمته؟" التطور بقى مقصود.',moral:'التأمل المنتظم هو فرق بين اللي بيتطور واللي بيكرر نفس السنة 20 مرة.',goal:'هدف اليوم: اكتب إجابة على الـ 3 أسئلة دول عن أسبوعك.'},
+{day:70,tag:'performance',title:'مبدأ الـ Error Tracking',story:'Agent بدأ يتتبع أخطاؤه في دفتر: نوع الغلطة، السبب، والحل. بعد شهر، لاحظ إن 80% من أخطائه من نوعين فقط. ركّز عليهم وأخطاؤه نقصت بشكل ضخم.',moral:'الـ patterns في الأخطاء هي الطريق الأسرع للتطور.',goal:'هدف اليوم: ابدأ تتتبع أخطاءك في نوع محدد وابحث عن الـ pattern.'},
+{day:71,tag:'communication',title:'مهارة الـ Empathic Assertion',story:'Agent اتعلم التوازن بين الـ Empathy والـ Assertion: "أنا فاهم إن ده محبطك جداً (Empathy)، وفي نفس الوقت اللي نقدر نعمله هو... (Assertion)".',moral:'الـ Empathy من غير حدود بتعمل promises فارغة. الـ Assertion من غير Empathy بيكون بارد. الاتنين مع بعض.',goal:'هدف اليوم: في محادثة صعبة، استخدم الـ Empathic Assertion.'},
+{day:72,tag:'mindset',title:'مبدأ الـ Sustainable Pace',story:'في الـ Agile development، مبدأ Sustainable Pace بيقول إن الفريق لازم يشتغل بإيقاع يقدر يحافظ عليه للأجل البعيد. Sprint طويل بيكسر الناس. الـ agents اللي يشتغلوا بإيقاع مستدام بيفضلوا أطول وأفضل.',moral:'اشتغل بإيقاع تقدر تكمله مش بإيقاع تنهار منه.',goal:'هدف اليوم: قيّم إيقاعك في الشغل — هل تقدر تكمله 3 شهور؟'},
+{day:73,tag:'performance',title:'مبدأ الـ Cross-Training',story:'Agent طلب يتدرب على قسم تاني لأسبوع. رجع بفهم أعمق لكيف القسم التاني بيشتغل وبدأ يشرح للكلاينتس بشكل أوضح ما كنوا بيسألوا عنه.',moral:'فهم الصورة الكبيرة بيخليك أفضل في الجزء اللي إنت فيه.',goal:'هدف اليوم: سأل عن قسم تاني في الشركة وافهم شغله — ولو بسؤال بسيط.'},
+{day:74,tag:'communication',title:'مهارة الـ Strategic Silence',story:'Chris Voss، FBI negotiator، بيقول إن الصمت الاستراتيجي بيجبر الطرف التاني يملأ الفراغ بمعلومات. في البيع والحل، بعد عرضك للحل، صمت — الكلايت هيرد.',moral:'الصمت بعد الـ offer قوي جداً. اتعلم تستخدمه.',goal:'هدف اليوم: بعد أي عرض حل أو offer، صمت 3 ثواني قبل ما تكمل.'},
+{day:75,tag:'mindset',title:'مبدأ الـ Contribution Over Recognition',story:'بحث على أكثر الناس رضا عن شغلهم لاقى إنهم بيهتموا أكثر بـ "إيه اللي قدموه" من "إيه اللي حصلوا عليه". التركيز على الـ Contribution بيخلق معنى حتى في الأيام الصعبة.',moral:'سأل نفسك: "إيه اللي قدمته النهارده؟" مش "إيه اللي واخده النهارده؟"',goal:'هدف اليوم: في نهاية يومك، حدد حاجة واحدة قدمتها لكلايت أو زميل بشكل حقيقي.'},
+{day:76,tag:'performance',title:'مبدأ الـ Contextual Flexibility',story:'Agent ناجح مش بياخد نفس الأسلوب مع كل كلايت. كلايت قديم خبير = أسلوب مختلف عن كلايت جديد مش فاهم. تكييف الأسلوب حسب السياق مهارة راقية.',moral:'الـ One-size-fits-all مش بيشتغل مع الناس. كيّف نفسك.',goal:'هدف اليوم: حدد نوعين مختلفين من الكلاينتس واستخدم أسلوبين مختلفين معهم.'},
+{day:77,tag:'communication',title:'مهارة الـ Confirming Understanding',story:'"فهمت صح إنك قصدك...؟" جملة بسيطة بتمنع 80% من سوء الفهم. Agent اتعلم يستخدمها بعد أي طلب معقد أو شكوى.',moral:'تأكيد الفهم مش ضعف — هو احترافية.',goal:'هدف اليوم: في كل طلب أو شكوى، استخدم "فهمت صح إنك..." قبل الرد.'},
+{day:78,tag:'mindset',title:'مبدأ الـ Process vs Outcome',story:'المتحكم الوحيد هو العملية اللي بتعملها — مش دايماً النتيجة. البيع الكويس مش دايماً ينتهي بـ "نعم". الكلايت الزعلان مش دايماً بيبقى راضي حتى بعد حل مثالي. ركّز على اللي في إيدك.',moral:'كن منضبطاً في العملية وخلّي النتائج تجي.',goal:'هدف اليوم: حدد 3 أشياء في العملية بتاعتك أنت المسؤول عنهم 100%.'},
+{day:79,tag:'performance',title:'مبدأ الـ Knowledge Transfer',story:'Agent شاطر بدأ يعمل ملاحظات للـ agents الجدد: "لما الكلايت يقول X، الأفضل تعمل Y". ده مش بس ساعد التيم — رسّخ المعلومة في دماغه هو.',moral:'الشرح للآخرين أفضل طريقة للتعلم.',goal:'هدف اليوم: شارك زميل جديد حاجة تعلمتها من تجربتك.'},
+{day:80,tag:'communication',title:'مهارة الـ Positive Closure',story:'نهاية المكالمة بتترك أثر دائم. Agent اتعلم closure script قوية: يلخص الحل، يتأكد من الرضا، يشكر بصدق، ويعرض المساعدة المستقبلية. الـ CSAT ارتفع.',moral:'الكلمة الأخيرة بتبقى في ذاكرة الكلايت. اختارها بعناية.',goal:'هدف اليوم: صمم لنفسك closure مكالمة احترافي وجربه اليوم.'},
+{day:81,tag:'mindset',title:'مبدأ الـ Self-Efficacy',story:'Albert Bandura أثبت إن إيمانك بقدرتك على النجاح هو أقوى تنبؤ بالنجاح الفعلي. مش الموهبة — الإيمان بالقدرة. الـ self-efficacy بتتبنى من التجارب الناجحة.',moral:'بنِ ملف نجاحاتك. كل نجاح صغير بيبني إيمانك بنفسك.',goal:'هدف اليوم: افتكر 5 مكالمات ناجحة وافتكر إحساسك فيهم.'},
+{day:82,tag:'performance',title:'مبدأ الـ Adaptive Expertise',story:'الخبير المتكيف مش اللي اتعلم مهارة وكررها — هو اللي بيعدّل مهارته باستمرار حسب الظروف. الـ agent المحترف في 2025 مش زي المحترف في 2020 — العالم اتغير وهو اتغير معاه.',moral:'التكيف مع التغيير مش اختياري — هو مهارة أساسية.',goal:'هدف اليوم: فيه حاجة في طريقة شغلك لازم تتغير مع التغييرات الجديدة؟ ابدأ النهارده.'},
+{day:83,tag:'communication',title:'مهارة الـ Graceful Exit',story:'لما المحادثة تمتد بدون هدف، agent اتعلم ينهيها بكياسة: "عشان أضمن إن كل حاجة اتحلت بشكل صح، هلخص ما اتفقنا عليه ونختم." الكلايت ما حسش بإنهاء مفاجئ.',moral:'انهاء المحادثة صح أهم من استمرارها بدون هدف.',goal:'هدف اليوم: تدرب على كيفية إنهاء محادثة مطوّلة بشكل محترم.'},
+{day:84,tag:'mindset',title:'مبدأ الـ Excellence as Habit',story:'أرسطو قال: "نحن ما نكرره. التميز إذن ليس فعلاً، بل عادة." الـ excellence مش لحظة إلهام — هو مجموع الاختيارات الصغيرة كل يوم.',moral:'التميز عادة بتبنيها يوم بيوم، مش موهبة بتنتظرها.',goal:'هدف اليوم: حدد عادة مهنية واحدة لو عملتها كل يوم ستصبح متميزاً فيها.'},
+{day:85,tag:'performance',title:'مبدأ الـ Multi-Channel Awareness',story:'الكلايت بيتفاعل مع الشركة من قنوات كتيرة. Agent اتعلم يسأل: "هل تواصلت معنا قبل كدا؟ على أي قناة؟" عشان يفهم الصورة كاملة ومش يكرر معلومات.',moral:'تاريخ الكلايت مهم. افهمه قبل ما تبدأ.',goal:'هدف اليوم: في كل مكالمة، اسأل عن تاريخ الكلايت مع الشركة لو مش واضح.'},
+{day:86,tag:'communication',title:'مهارة الـ Emotional Labeling',story:'Chris Voss اكتشف إن تسمية مشاعر الكلايت بتخففها: "يبدو إنك محبط جداً من الموقف ده." الكلايت بيرد عادة: "آه، بالظبط." وبيبدأ يهدى.',moral:'تسمية المشاعر بتنزل حدتها. جرب وهتتفاجأ.',goal:'هدف اليوم: لما كلايت زعلان، حاول تسمّي مشاعره بدقة.'},
+{day:87,tag:'mindset',title:'مبدأ الـ Stoic Daily Practice',story:'الرواقيون كانوا بيبدأوا يومهم بسؤال: "إيه التحديات اللي ممكن تواجهني النهارده وإزاي هتعامل معها؟" وبيختموا بـ: "إيه اللي عملته كويس وإيه اللي ممكن يتحسن؟"',moral:'البداية المقصودة والنهاية الواعية بتصنع يوم أفضل.',goal:'هدف اليوم: ابدأ يومك بسؤال عن التحديات المتوقعة واختمه بسؤال عن الدروس.'},
+{day:88,tag:'performance',title:'مبدأ الـ Relationship Memory',story:'Agent بدأ يدوّن ملاحظات عن الكلاينتس المتكررين: اسم الطفل، المشروع اللي بيشتغل فيه، المشكلة اللي حلها الأسبوع اللي فات. لما الكلايت حس إنه متذكر، الولاء ارتفع.',moral:'الناس بتنسى ما قلته، بتنسى ما عملته، بس ما بتنساش إزاي خلّتهم يحسوا. سجّل وتذكر.',goal:'هدف اليوم: لكلايت متكرر، سجّل ملاحظة شخصية واحدة عنه.'},
+{day:89,tag:'mindset',title:'مبدأ الـ Meaningful Contribution',story:'Viktor Frankl نجا من المحرقة لأنه وجد معنى. في الشغل اليومي، agent اللي بيحس إن شغله ليه معنى بيتحمل أكتر ويعطي أكتر. المعنى مش بيجي من الشغل — بيجي من إزاي بتشوفه.',moral:'إنت بتحدد معنى شغلك. اختار أن تراه بشكل مشرّف.',goal:'هدف اليوم: اكتب جملة تصف معنى شغلك بشكل شخصي وصادق.'},
+{day:90,tag:'culture',title:'اليوم الـ 90 للـ Agent — إنت مختلف',story:'مسافر بدأ رحلة ورجع. المكان نفسه بس هو اتغير. إنت في اليوم 90 عندك 90 درساً، 90 تجربة، وأداة جديدة كل يوم. الفرق مش في الشهادات — في اللي اتبنى جوّاك.',moral:'90 يوم من التعلم المقصود بيبنوا شخص مختلف. احتفل بالتغيير.',goal:'هدف اليوم: شارك زميلك أهم 3 حاجات اتعلمتها في الـ 90 يوم.'},
+],
+hr:[
+{day:1,tag:'hr',title:'أهمية الـ Onboarding الصح',story:'دراسة من SHRM لاقت إن الموظف اللي بياخد Onboarding احترافي بيبقى في الشركة بنسبة أعلى بـ 82% في السنة الأولى. لكن معظم الشركات بتديه ورقة وتقوله "اتعلم".',moral:'الـ Onboarding مش إجراء — هو رسالة: "إحنا مهتمين بك."',goal:'هدف النهارده: راجع تجربة الـ Onboarding في فريقك — هل هي محترمة؟'},
+{day:2,tag:'hr',title:'فن الاحتفاظ بالموظفين',story:'Gallup بيقول إن 51% من الموظفين المستعدين للمغادرة بيقولوا إن مديرهم أو شركتهم كان ممكن يعمل حاجة تفرق. التكلفة الحقيقية لاستبدال موظف = 50-200% من راتبه السنوي.',moral:'الاحتفاظ بالموظف أرخص بكتير من توظيف بديل. الاستثمار في الناس يعود.',goal:'هدف اليوم: سأل واحد من تيمك: "إيه اللي بيخليك مكمل هنا؟" واسمع بجد.'},
+{day:3,tag:'hr',title:'مبدأ الـ Job Fit vs Person Fit',story:'الـ HR الذكي بيفرق بين إن الشخص يناسب الوظيفة (Job Fit) وإن الشخص يناسب ثقافة الفريق (Person Fit). ممكن شخص يبقى شاطر جداً بس يكون misfit مع التيم ويدمّر الـ dynamics.',moral:'وظّف على الـ culture والـ values، ودرّب على الـ skills.',goal:'هدف اليوم: في التوظيف الجاي، حدد 3 قيم أساسية لازم الشخص يتوافق معها.'},
+{day:4,tag:'hr',title:'أهمية الـ Stay Interviews',story:'معظم الشركات بتعمل Exit Interview — سؤال الشخص ليه بيمشي. Lori Bock طورت فكرة الـ Stay Interview: سؤال الشخص ليه بيفضل. النتايج مفاجأة وبتغير الـ retention strategy.',moral:'مستنيش حد يمشي تفهم ليه. اسأل دلوقتي ليه بيفضل.',goal:'هدف اليوم: اعمل Stay Interview مع حد في التيم: "إيه اللي بيخليك هنا؟ وإيه اللي لو اتغير كان هيفرق؟"'},
+{day:5,tag:'hr',title:'مبدأ الـ Psychological Contract',story:'Denise Rousseau طورت مفهوم الـ Psychological Contract: التوقعات الضمنية اللي الموظف عنده من الشركة والعكس. لما الـ contract ده بيتكسر (ولو من غير قصد)، الثقة بتتهد.',moral:'وضّح التوقعات من أول يوم. الـ implicit ده اللي بيولد الخيبة.',goal:'هدف اليوم: فكر في حاجة تعتقدها ضمنية مع تيمك وصرّح بيها.'},
+{day:6,tag:'hr',title:'الـ Performance Management الصح',story:'الـ Performance Review السنوية مات. الشركات الناجحة زي Google وAdobe اتجهت لـ Continuous Performance Management: feedback مستمر، check-ins منتظمة، وتطوير لحظي.',moral:'الـ annual review مجرد لقطة. الـ continuous feedback هو الفيلم كامل.',goal:'هدف اليوم: صمم نظام feedback بسيط يحصل أكثر من مرة في السنة.'},
+{day:7,tag:'hr',title:'أهمية الـ Diversity في الفريق',story:'McKinsey دراسة على 1000+ شركة لاقت إن الشركات اللي عندها تنوع في القيادة بتحقق أرباح أعلى بـ 35% من المتوسط. التنوع مش فقط عدالة — هو ميزة تنافسية.',moral:'التنوع في الأفكار والخلفيات بيولد ابتكار. احتفل بالاختلاف.',goal:'هدف اليوم: في قرار جاي، دور على صوت مختلف ليس من المجموعة المعتادة.'},
+{day:8,tag:'hr',title:'مبدأ الـ Learning Organization',story:'Peter Senge طور فكرة المنظمة المتعلمة: شركة بتعلم من نفسها بشكل مستمر. الشركات اللي بتستثمر في تعلم موظفيها بتكون أكثر adaptability في أوقات الأزمات.',moral:'الشركة اللي بتتعلم هي الشركة اللي بتبقى.',goal:'هدف اليوم: حدد ساعة أسبوعية للفريق للتعلم المشترك — ولو مقال أو فيديو.'},
+{day:9,tag:'hr',title:'مبدأ الـ Employee Value Proposition',story:'EVP هو "ليه الشخص الشاطر هيجي يشتغل عندك؟" مش بس الراتب — الثقافة، الفرص، الـ purpose. الشركات اللي عندها EVP واضح بتجذب أحسن المواهب.',moral:'إيه اللي بيميز شغلك عند شركتك؟ الإجابة دي هي الـ EVP.',goal:'هدف اليوم: اكتب 3 جمل تصف ليه حد شاطر يجي يشتغل في تيمك.'},
+{day:10,tag:'hr',title:'أهمية الـ Wellbeing في الشغل',story:'Harvard Business Review أثبت إن الموظفين اللي بيحسوا بـ Wellbeing عالي بيكونوا أكثر إنتاجاً بـ 31% وأكثر إبداعاً بـ 3 أضعاف وأقل غياباً بـ 37%.',moral:'الـ Wellbeing مش رفاهية — هو استثمار بيرجع بأرباح حقيقية.',goal:'هدف اليوم: سأل شخص في تيمك: "عامل إزيك حقيقي؟" وانتظر إجابة حقيقية.'},
+{day:11,tag:'hr',title:'مبدأ الـ Talent Pipeline',story:'شركات زي GE كانت دايماً عندها خطة succession: كل مدير عنده بديل محتمل مجاهز. لما أي حد يمشي، مفيش disruption. ده مش بيصير من غير استثمار مسبق في التطوير.',moral:'التوظيف ردة فعل. الـ Talent Pipeline استباقي.',goal:'هدف اليوم: فكر: لو حد رئيسي في الفريق مشى بكره، فيه بديل محتمل؟'},
+{day:12,tag:'hr',title:'الـ Compensation مش بس راتب',story:'Total Rewards Strategy بتقول إن الموظف بيقيّم حزمة كاملة: راتب + مزايا + بيئة + فرص تطوير + معنى. الشركات اللي بتعرض الـ package كامل بتكسب المنافسة على المواهب.',moral:'الراتب يجذب. الـ Total Rewards يحتفظ.',goal:'هدف اليوم: اعمل قائمة بكل ما بيقدمه تيمك للموظف خارج الراتب.'},
+{day:13,tag:'hr',title:'مبدأ الـ Constructive Dismissal',story:'أحياناً الموظف ما بيطردش — الظروف بتتغير لحد ما هو بيقرر يمشي. Constructive Dismissal ده لما الشركة بتعمل بيئة بتضطر فيها الشخص يستقيل. ده مش بس أخلاقياً غلط — قانونياً محفوف بمخاطر.',moral:'راقب: هل الظروف في تيمك بتدفع الناس للمغادرة من غير ما نقول "اتفضل امشي"؟',goal:'هدف اليوم: قيّم: هل فيه حاجة في بيئة الشغل بتضغط على الناس بدون ضرورة؟'},
+{day:14,tag:'hr',title:'أهمية الـ Manager Training',story:'Gallup أثبت إن 70% من Engagement الموظف بيتحدد بالمانجر المباشر. بس معظم الشركات بتحوّل أحسن technical person لمانجر من غير تدريب على الـ people management.',moral:'الترقية لإدارة الناس تحتاج مهارات مختلفة تماماً عن الترقية التقنية. درّب مانجريك.',goal:'هدف اليوم: حدد حاجة واحدة في الـ people management محتاجها أنت أو التيم ليدرز عندك.'},
+{day:15,tag:'hr',title:'مبدأ الـ Fair Process',story:'في أي قرار بيأثر على الناس — ترقية، تغيير، إعادة هيكلة — الناس مش بس عايزة النتيجة العادلة، هي عايزة العملية تكون عادلة. لو الـ process شفاف وعادل، حتى لو النتيجة مش اللي اتمنوه، الناس بتقبلها.',moral:'الـ Fair Process يبني ثقة حتى في القرارات الصعبة.',goal:'هدف اليوم: في قرار جاي بيأثر على التيم، وضّح العملية قبل النتيجة.'},
+{day:16,tag:'hr',title:'أهمية الـ Exit Interviews',story:'Exit Interview مش للتوثيق — للتعلم. لما الشخص بيمشي، بيكون عنده صدق مش بيقدر يقوله قبل كدا. الـ HR الذكي بيسمع ويحلل الـ patterns في ليه الناس بتمشي.',moral:'كل شخص بيمشي عنده درس. اسمعه.',goal:'هدف اليوم: راجع آخر 3 استقالات — هل فيه pattern مشترك؟'},
+{day:17,tag:'hr',title:'مبدأ الـ Internal Mobility',story:'LinkedIn لاقى إن الموظفين في الشركات اللي بيسمحوا بـ Internal Mobility (انتقال بين أقسام) بيفضلوا ضعف الوقت من الباقيين. ناسهم بتلاقي فرصتهم جوّه بدل ما تدورها برّه.',moral:'قبل ما تبحث عن استقطاب خارجي، ابحث عن الطاقة الكامنة عندك.',goal:'هدف اليوم: فيه حد في التيم ممكن ينمو في مسار تاني داخل الفريق؟'},
+{day:18,tag:'hr',title:'أهمية الـ Recognition Programs',story:'O.C. Tanner لاقى إن 79% من الموظفين اللي استقالوا ذكروا "نقص التقدير" كسبب رئيسي. Recognition مش بس جائزة — هي اعتراف بإنك شايف الشخص وجهده.',moral:'الاعتراف بالجهد بيكلف القليل ويعطي الكثير.',goal:'هدف اليوم: صمم طريقة بسيطة وثابتة لتقدير الجهد في تيمك.'},
+{day:19,tag:'hr',title:'مبدأ الـ Inclusive Leadership',story:'Deloitte لاقى إن الفرق اللي بتحس بـ Inclusion بتكون أعلى أداءً بـ 80%. الـ Inclusive Leader بيتأكد إن كل صوت بيتسمع وكل فرد بيحس إنه ينتمي.',moral:'Inclusion مش شعار — ممارسات يومية بتخلي كل واحد يحس إنه جزء.',goal:'هدف اليوم: في الاجتماع الجاي، تأكد إن كل صوت اتسمع قبل ما تاخد القرار.'},
+{day:20,tag:'hr',title:'أهمية الـ Psychological Safety في HR',story:'إيمي إيدموندسون أثبتت إن الـ Psychological Safety هو أهم عامل في أداء الفريق. وظيفة الـ HR أنها تبني وتحمي هذا الأمان في كل الـ policies والـ practices.',moral:'الـ HR مش بس موارد بشرية — هو حارس بيئة العمل.',goal:'هدف اليوم: قيّم: هل الـ HR policies بتاعتك بتدعم الـ Psychological Safety ولا بتعيقه؟'},
+{day:21,tag:'hr',title:'مبدأ الـ Data-Driven HR',story:'People Analytics بقت من أهم مجالات الـ HR الحديث. بدل قرارات على الحدس، الشركات بتستخدم بيانات: من بيغيب أكتر؟ مين في خطر؟ إيه أنماط الـ turnover؟',moral:'القرارات الـ HR المبنية على بيانات أدق وأقل تأثراً بالـ bias.',goal:'هدف اليوم: حدد metric واحد تبدأ تتتبعه في تيمك.'},
+{day:22,tag:'hr',title:'أهمية الـ Career Conversations',story:'LinkedIn لاقى إن الموظفين اللي عندهم career conversations منتظمة مع مديرهم أكثر engagement بـ 3 مرات. بس أقل من 20% من المديرين بيعملوها.',moral:'الحوار عن المستقبل المهني للموظف مسؤولية المانجر مش الموظف بس.',goal:'هدف اليوم: ابدأ career conversation مع واحد في التيم: "أنت عايز توصل فين؟"'},
+{day:23,tag:'hr',title:'مبدأ الـ Job Crafting',story:'Amy Wrzesniewski أثبتت إن الموظفين اللي بيعيدوا تصميم شغلهم (Job Crafting) ليناسب نقاط قوتهم بيبقوا أكثر سعادة وإنتاجية. الـ HR الذكي بيدعم ده.',moral:'مش كل شخص في نفس الوظيفة بيشتغل بنفس الطريقة. وده ممكن يكون ميزة.',goal:'هدف اليوم: سأل شخص: "إيه الجزء من شغلك اللي بتحبه أكتر؟" وفكر كيف تضخّمه.'},
+{day:24,tag:'hr',title:'أهمية الـ Mentorship Programs',story:'CNBC لاقى إن 91% من الموظفين اللي عندهم mentor بيكونوا أكثر رضا عن شغلهم. الـ Mentorship مش برامج رسمية بس — هو culture بيتبنى.',moral:'الـ Mentorship بيسرّع التطور ويبني ولاء. استثمر فيه.',goal:'هدف اليوم: حدد زوجاً واحداً mentor-mentee في تيمك وشجع العلاقة.'},
+{day:25,tag:'hr',title:'مبدأ الـ Realistic Job Preview',story:'شركات لاقت إن لما بتوصف الوظيفة بصدق — الجيد والصعب — الناس اللي بتيجي بتبقى أكثر رضا وأقل دوران لأنهم ما فضلوش متفاجئين.',moral:'الإعلان الصادق عن الوظيفة يوفر وقت الكل.',goal:'هدف اليوم: راجع الـ job description للوظايف المفتوحة — هل هي صادقة عن التحديات؟'},
+{day:26,tag:'hr',title:'أهمية الـ Conflict Resolution',story:'CPP Inc لاقى إن الموظف بيقضي 2.8 ساعة أسبوعياً في التعامل مع conflict. وإن 25% من المديرين بيقضوا أكثر من 9 ساعات. بدون مهارات conflict resolution، الطاقة بتتبدد.',moral:'Conflict مش مشكلة — إدارته الغلط هي المشكلة.',goal:'هدف اليوم: فيه conflict صغير في تيمك بتتجنبه؟ وقت تتعامل معه.'},
+{day:27,tag:'hr',title:'مبدأ الـ Culture Add vs Culture Fit',story:'Culture Fit كان المعيار لزمان. Culture Add هو المعيار الأحدث: مش عايز حد زيك — عايز حد يضيف بُعد جديد لثقافتك. الفرق ده بيمنع الـ echo chambers.',moral:'وظّف من يثري ثقافتك لا من يعكسها فقط.',goal:'هدف اليوم: في التوظيف الجاي، سأل: "إيه الجديد اللي هيجيبه ده للفريق؟"'},
+{day:28,tag:'hr',title:'أهمية الـ Feedback Culture',story:'Adobe وـ Microsoft لما حذفوا الـ Annual Review التقليدي واستبدلوه بـ Continuous Feedback، رأوا تحسناً واضحاً في الـ engagement والـ performance.',moral:'الـ Feedback المنتظم مش تعذيب — هو خارطة طريق للتطور.',goal:'هدف اليوم: ساعد في بناء ثقافة feedback بتبدأ بإنك تطلب feedback على نفسك.'},
+{day:29,tag:'hr',title:'مبدأ الـ Employee Lifecycle',story:'كل موظف بيمر بـ lifecycle: Attract → Hire → Onboard → Develop → Retain → Exit. الـ HR الاستراتيجي بيصمم تجربة استثنائية في كل مرحلة.',moral:'كل مرحلة في حياة الموظف مهمة. مش بس التوظيف.',goal:'هدف اليوم: حدد أضعف مرحلة في الـ lifecycle عند فريقك وفكر في تحسينها.'},
+{day:30,tag:'hr',title:'نهاية شهر HR — Big Picture',story:'Dave Ulrich، أب الـ HR الحديث، قال: "الـ HR موجود لأنه يخلق قيمة لأصحاب العمل والموظفين والعملاء." الـ HR الاستراتيجي مش ورق وإجراءات — هو architecture الإنسان في الشركة.',moral:'إنت مش بتدير ملفات — بتبني ناس وبتبني مستقبل.',goal:'هدف اليوم: اسأل نفسك: "إيه أكبر تأثير عملته على الناس في التيم ده الشهر الجاي؟"'},
+],
+};
+
+const ALL_DATA = {
+  tl: [...DATA.tl, ...DATA.tl2, ...DATA.tl3],
+  ag: [...DATA.ag, ...DATA.ag2, ...DATA.ag3],
+  hr: DATA.hr
+};
+
+let currentTab = 'tl';
+let state = JSON.parse(localStorage.getItem('tracker_state') || '{}');
+
+function saveState() { localStorage.setItem('tracker_state', JSON.stringify(state)); }
+
+function setTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.className = 'tab');
+  document.getElementById('tab-'+tab).classList.add('active-'+tab);
+  renderCards();
+}
+
+function toggleCard(id) {
+  const el = document.getElementById('story-'+id);
+  if(el) el.classList.toggle('open');
+}
+
+function toggleDone(id, type, e) {
+  e.stopPropagation();
+  const key = type+'_'+id;
+  if(state[key]) {
+    delete state[key];
+  } else {
+    state[key] = new Date().toLocaleDateString('ar-EG',{day:'numeric',month:'short'});
+  }
+  saveState();
+  updateStats();
+  renderCards();
+}
+
+function updateStats() {
+  const tlDone = ALL_DATA.tl.filter((_,i)=>state['tl_'+(i+1)]).length;
+  const agDone = ALL_DATA.ag.filter((_,i)=>state['ag_'+(i+1)]).length;
+  const hrDone = ALL_DATA.hr.filter((_,i)=>state['hr_'+(i+1)]).length;
+  const total = tlDone + agDone + hrDone;
+  const totalAll = ALL_DATA.tl.length + ALL_DATA.ag.length + ALL_DATA.hr.length;
+  document.getElementById('s-done').textContent = total;
+  document.getElementById('s-tl-done').textContent = tlDone;
+  document.getElementById('s-ag-done').textContent = agDone;
+  const pct = Math.round(total/totalAll*100);
+  document.getElementById('pct-lbl').textContent = pct + '%';
+  document.getElementById('prog-bar').style.width = pct + '%';
+}
+
+function renderCards() {
+  const data = ALL_DATA[currentTab];
+  const q = document.getElementById('search').value.trim().toLowerCase();
+  const container = document.getElementById('cards-container');
+  const typeLabel = currentTab === 'tl' ? 'TL' : currentTab === 'ag' ? 'AG' : 'HR';
+  const typeClass = currentTab;
+
+  let filtered = data.map((item, idx) => ({...item, idx})).filter(item =>
+    !q || item.title.toLowerCase().includes(q) || item.story.toLowerCase().includes(q) || item.moral.toLowerCase().includes(q)
+  );
+
+  if(filtered.length === 0) {
+    container.innerHTML = '<div class="empty">مفيش نتايج للبحث ده</div>';
+    return;
+  }
+
+  let html = '';
+  let lastWeek = -1;
+
+  filtered.forEach(item => {
+    const idx = item.idx;
+    const dayNum = idx + 1;
+    const week = Math.ceil(dayNum/7);
+    const key = currentTab + '_' + dayNum;
+    const done = !!state[key];
+    const dateStr = state[key] || '';
+    const cardId = currentTab + '_' + dayNum;
+
+    if(!q && week !== lastWeek) {
+      html += `<div class="week-label">الأسبوع ${week} — الأيام ${(week-1)*7+1} لـ ${Math.min(week*7, data.length)}</div>`;
+      lastWeek = week;
+    }
+
+    html += `
+    <div class="card ${done?'open':''}" onclick="toggleCard('${cardId}')">
+      <div class="day-badge ${typeClass}">
+        <span class="d-type">${typeLabel}</span>
+        <span class="d-num">${dayNum}</span>
+      </div>
+      <div class="card-body">
+        <div class="card-top">
+          <span class="tag tag-${item.tag}">${item.tag}</span>
+        </div>
+        <h3>${item.title}</h3>
+        <div class="story-wrap" id="story-${cardId}">
+          <div class="story">
+            ${item.story}
+            <div class="moral ${typeClass}">📌 ${item.moral}</div>
+            ${item.goal ? `<div class="goal-line">🎯 <span>${item.goal}</span></div>` : ''}
+          </div>
+        </div>
+      </div>
+      <div class="check-col">
+        <button class="check-btn ${done?'checked':''}" onclick="toggleDone(${dayNum},'${currentTab}',event)">${done?'✓':'○'}</button>
+        ${dateStr ? `<span class="date-lbl">${dateStr}</span>` : ''}
+      </div>
+    </div>`;
+  });
+
+  container.innerHTML = html;
+}
+
+updateStats();
+renderCards();
+</script>
+</body>
+</html>
