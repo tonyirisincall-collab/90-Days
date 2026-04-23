@@ -4,107 +4,101 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>90-Day Leadership Tracker</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%230D0F14'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-size='28' font-weight='900' fill='%23E6A817' font-family='serif'%3E90%3C/text%3E%3C/svg%3E">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Noto+Naskh+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
-   DESIGN TOKENS
+   DESIGN TOKENS — Warm Light Theme
    ========================================================= */
 :root {
-  --bg:       #080A0F;
-  --bg1:      #0D1018;
-  --bg2:      #111520;
-  --bg3:      #161B2A;
-  --bg4:      #1C2235;
-  --border:   rgba(255,255,255,0.05);
-  --border2:  rgba(255,255,255,0.10);
-  --border3:  rgba(255,255,255,0.16);
+  --bg:        #F5F0E8;
+  --bg1:       #EDE6D8;
+  --bg2:       #FDFAF4;
+  --bg3:       #F0EAD8;
+  --bg4:       #E8DFC8;
+  --card-bg:   rgba(255,252,245,0.92);
+  --card-bg2:  rgba(255,250,240,0.85);
 
-  --gold:     #C9923A;
-  --gold2:    #E8B65A;
-  --gold3:    #F5D080;
-  --gold-glow:rgba(201,146,58,0.18);
-  --gold-dim: rgba(201,146,58,0.08);
+  --border:    rgba(180,148,80,0.12);
+  --border2:   rgba(180,148,80,0.22);
+  --border3:   rgba(180,148,80,0.38);
 
-  --teal:     #38BDF8;
-  --teal-dim: rgba(56,189,248,0.08);
-  --violet:   #A78BFA;
-  --violet-dim:rgba(167,139,250,0.08);
-  --emerald:  #34D399;
-  --emerald-dim:rgba(52,211,153,0.08);
-  --coral:    #FB7185;
-  --coral-dim:rgba(251,113,133,0.08);
+  --gold:      #B8892A;
+  --gold2:     #D4A843;
+  --gold3:     #E8C46A;
+  --gold4:     #F5D980;
+  --gold-glow: rgba(184,137,42,0.2);
+  --gold-dim:  rgba(184,137,42,0.08);
 
-  --text:     #EEF0F8;
-  --text2:    #8A93B0;
-  --text3:    #454E6A;
-  --text4:    #2A3050;
+  --teal:      #1A7A8A;
+  --teal2:     #2A9AAE;
+  --teal-dim:  rgba(26,122,138,0.09);
+  --violet:    #7B5EA7;
+  --violet-dim:rgba(123,94,167,0.09);
+  --emerald:   #2A8A5C;
+  --emerald2:  #34A870;
+  --emerald-dim:rgba(42,138,92,0.09);
+  --coral:     #C05050;
+  --coral-dim: rgba(192,80,80,0.09);
 
-  --radius:   18px;
-  --radius-sm:10px;
-  --radius-xs:6px;
+  --ink:       #2A2318;
+  --ink2:      #5A4E3A;
+  --ink3:      #8A7A60;
+  --ink4:      #B8A888;
+  --ink5:      #D8CEB8;
 
-  --shadow:   0 8px 32px rgba(0,0,0,0.5);
-  --shadow-sm:0 4px 16px rgba(0,0,0,0.35);
-  --shadow-gold: 0 0 24px rgba(201,146,58,0.25);
+  --shadow:    0 8px 40px rgba(100,80,40,0.12);
+  --shadow-sm: 0 4px 20px rgba(100,80,40,0.08);
+  --shadow-gold: 0 0 30px rgba(184,137,42,0.2);
+
+  --radius:    20px;
+  --radius-sm: 12px;
+  --radius-xs: 7px;
 }
 
 /* =========================================================
    RESET & BASE
    ========================================================= */
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-
-html { scroll-behavior: smooth; }
-
+html { scroll-behavior:smooth; }
 body {
   background: var(--bg);
-  color: var(--text);
-  font-family: 'Cairo', 'Noto Naskh Arabic', sans-serif;
+  color: var(--ink);
+  font-family: 'Cairo', sans-serif;
   min-height: 100vh;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
 /* =========================================================
-   AMBIENT BACKGROUND
+   PAPYRUS TEXTURE BACKGROUND
    ========================================================= */
-.ambient {
+.bg-layer {
   position: fixed; inset: 0; pointer-events: none; z-index: 0;
   overflow: hidden;
 }
-.ambient-orb {
-  position: absolute; border-radius: 50%;
-  filter: blur(120px); opacity: 0.12;
-  animation: drift 18s ease-in-out infinite alternate;
+.bg-paper {
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 15% 20%, rgba(232,196,106,0.18) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 80% at 85% 80%, rgba(42,138,92,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 50% at 50% 50%, rgba(26,122,138,0.05) 0%, transparent 70%),
+    linear-gradient(160deg, #F8F2E4 0%, #EDE5D0 40%, #F2ECD8 100%);
 }
-.ambient-orb.a {
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, #C9923A 0%, transparent 70%);
-  top: -200px; right: -150px;
-  animation-delay: 0s;
+.bg-grain {
+  position: absolute; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.045'/%3E%3C/svg%3E");
+  opacity: 0.6; mix-blend-mode: multiply;
 }
-.ambient-orb.b {
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, #38BDF8 0%, transparent 70%);
-  bottom: -100px; left: -100px;
-  animation-delay: -6s;
-}
-.ambient-orb.c {
-  width: 300px; height: 300px;
-  background: radial-gradient(circle, #A78BFA 0%, transparent 70%);
-  top: 50%; left: 40%;
-  animation-delay: -12s; opacity: 0.07;
-}
-@keyframes drift {
-  from { transform: translate(0,0) scale(1); }
-  to   { transform: translate(40px,30px) scale(1.08); }
-}
-
-/* Grain */
-.grain {
-  position: fixed; inset: 0; pointer-events: none; z-index: 1;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-  opacity: 0.35;
+/* Decorative hieroglyph lines */
+.bg-lines {
+  position: absolute; inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 119px,
+      rgba(184,137,42,0.04) 120px
+    );
 }
 
 /* =========================================================
@@ -112,258 +106,339 @@ body {
    ========================================================= */
 .app {
   position: relative; z-index: 2;
-  max-width: 860px; margin: 0 auto;
-  padding: 2rem 1.25rem 6rem;
+  max-width: 880px; margin: 0 auto;
+  padding: 2.5rem 1.5rem 6rem;
 }
 
 /* =========================================================
    HEADER
    ========================================================= */
 .header {
-  display: flex; align-items: center; gap: 1.25rem;
-  margin-bottom: 2rem;
-  background: linear-gradient(135deg, var(--bg2) 0%, var(--bg3) 100%);
-  border: 0.5px solid var(--border2);
-  border-radius: var(--radius);
-  padding: 1.4rem 1.75rem;
-  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.04);
   position: relative; overflow: hidden;
-  animation: slideDown 0.6s cubic-bezier(0.22,1,0.36,1) both;
+  background: linear-gradient(135deg, rgba(255,252,245,0.97) 0%, rgba(248,242,228,0.95) 100%);
+  border: 1px solid var(--border2);
+  border-radius: 24px;
+  padding: 1.75rem 2rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.8);
+  display: flex; align-items: center; gap: 1.5rem;
+  animation: slideDown 0.8s cubic-bezier(0.22,1,0.36,1) both;
 }
+/* Top gold line */
 .header::before {
   content: '';
-  position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  opacity: 0.6;
+  position: absolute; top: 0; left: 10%; right: 10%; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--gold3), var(--gold), transparent);
+  border-radius: 0 0 2px 2px;
 }
-@keyframes slideDown {
-  from { opacity:0; transform:translateY(-20px); }
-  to   { opacity:1; transform:translateY(0); }
+/* Bottom subtle shadow */
+.header::after {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 60px;
+  background: linear-gradient(to top, rgba(184,137,42,0.04), transparent);
+  pointer-events: none;
 }
 
-.header-emblem {
-  width: 56px; height: 56px; flex-shrink: 0;
+/* Egyptian corner ornaments */
+.header-corner {
+  position: absolute;
+  width: 32px; height: 32px;
+  opacity: 0.3;
+}
+.header-corner.tl { top: 8px; right: 8px; }
+.header-corner.br { bottom: 8px; left: 8px; transform: rotate(180deg); }
+.header-corner svg { width: 100%; height: 100%; }
+
+@keyframes slideDown {
+  from { opacity:0; transform:translateY(-30px) scale(0.97); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* =========================================================
+   EYE OF HORUS LOGO
+   ========================================================= */
+.horus-wrap {
+  flex-shrink: 0;
+  width: 72px; height: 72px;
   position: relative;
+  display: flex; align-items: center; justify-content: center;
 }
-.header-emblem svg {
-  width: 100%; height: 100%;
-  filter: drop-shadow(0 0 12px rgba(201,146,58,0.4));
-  animation: pulse-glow 3s ease-in-out infinite;
+.horus-ring {
+  position: absolute; inset: -4px;
+  border-radius: 50%;
+  background: conic-gradient(
+    from 0deg,
+    var(--gold4) 0deg,
+    var(--gold) 90deg,
+    var(--gold4) 180deg,
+    var(--gold2) 270deg,
+    var(--gold4) 360deg
+  );
+  animation: spin-ring 12s linear infinite;
+  mask: radial-gradient(transparent 26px, black 28px);
+  -webkit-mask: radial-gradient(transparent 26px, black 28px);
 }
-@keyframes pulse-glow {
-  0%,100% { filter: drop-shadow(0 0 8px rgba(201,146,58,0.3)); }
-  50%      { filter: drop-shadow(0 0 20px rgba(201,146,58,0.6)); }
+@keyframes spin-ring {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.horus-bg {
+  position: absolute; inset: 0; border-radius: 50%;
+  background: radial-gradient(circle, #FFF8E8 30%, #F5E8C0 100%);
+  box-shadow: 0 4px 20px rgba(184,137,42,0.25), inset 0 1px 3px rgba(255,255,255,0.9);
+}
+.horus-svg {
+  position: relative; z-index: 1;
+  width: 52px; height: 52px;
+  animation: eye-blink 6s ease-in-out infinite;
+  filter: drop-shadow(0 2px 6px rgba(184,137,42,0.35));
+}
+@keyframes eye-blink {
+  0%, 45%, 55%, 100% { transform: scaleY(1); }
+  50% { transform: scaleY(0.08); }
 }
 
 .header-text { flex: 1; }
 .header-text h1 {
-  font-size: 18px; font-weight: 700; color: var(--text);
-  letter-spacing: -0.3px;
+  font-family: 'Cinzel', serif;
+  font-size: 17px; font-weight: 700;
+  color: var(--gold);
+  letter-spacing: 1px;
+  text-shadow: 0 1px 2px rgba(184,137,42,0.2);
 }
 .header-text p {
-  font-size: 12px; color: var(--text3); margin-top: 3px;
-  font-weight: 400;
+  font-size: 12px; color: var(--ink3);
+  margin-top: 4px; font-weight: 500;
+}
+.header-text .subtitle-ar {
+  font-size: 13px; color: var(--ink2);
+  margin-top: 2px; font-weight: 600;
 }
 
 .header-meta {
-  text-align: left; flex-shrink: 0;
-  display: flex; flex-direction: column; gap: 4px; align-items: flex-end;
+  display: flex; flex-direction: column;
+  align-items: flex-end; gap: 6px; flex-shrink: 0;
 }
-.sync-indicator {
-  display: flex; align-items: center; gap: 5px;
-  font-size: 10px; color: var(--text3);
+.sync-chip {
+  display: flex; align-items: center; gap: 6px;
+  background: var(--bg3); border: 1px solid var(--border2);
+  border-radius: 20px; padding: 4px 10px 4px 8px;
+  font-size: 10px; color: var(--ink3);
 }
 .sync-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--text4);
-  transition: background 0.3s, box-shadow 0.3s;
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--ink5); transition: all 0.4s;
+  flex-shrink: 0;
 }
-.sync-dot.active {
-  background: var(--emerald);
-  box-shadow: 0 0 8px rgba(52,211,153,0.6);
-  animation: blink 1.5s ease-in-out infinite;
-}
-.sync-dot.syncing {
-  background: var(--gold2);
-  box-shadow: 0 0 8px rgba(232,182,90,0.6);
-  animation: spin-dot 0.8s linear infinite;
-}
-.sync-dot.error {
-  background: var(--coral);
-  box-shadow: 0 0 8px rgba(251,113,133,0.6);
-}
-@keyframes blink  { 0%,100%{opacity:1} 50%{opacity:0.4} }
-@keyframes spin-dot { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+.sync-dot.active  { background: var(--emerald2); box-shadow: 0 0 8px rgba(52,168,112,0.6); animation: pulse-dot 2s ease-in-out infinite; }
+.sync-dot.syncing { background: var(--gold3); box-shadow: 0 0 8px rgba(232,196,106,0.7); animation: spin-glow 0.8s linear infinite; }
+.sync-dot.error   { background: var(--coral); box-shadow: 0 0 8px rgba(192,80,80,0.5); }
+@keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.8)} }
+@keyframes spin-glow { 0%{box-shadow:0 0 8px rgba(232,196,106,0.7)} 50%{box-shadow:0 0 16px rgba(232,196,106,0.9)} 100%{box-shadow:0 0 8px rgba(232,196,106,0.7)} }
 
-.header-date-val {
-  font-size: 12px; font-weight: 600; color: var(--gold2);
+.header-date {
+  font-size: 11px; font-weight: 700; color: var(--gold);
+  background: var(--gold-dim);
+  border: 1px solid rgba(184,137,42,0.2);
+  border-radius: 8px; padding: 3px 10px;
 }
 
 /* =========================================================
    STATS GRID
    ========================================================= */
 .stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 1.5rem;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 12px; margin-bottom: 1.75rem;
 }
 .stat {
-  background: var(--bg2);
-  border: 0.5px solid var(--border);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 1rem 0.75rem;
-  text-align: center;
-  position: relative; overflow: hidden;
-  cursor: default;
-  transition: border-color 0.25s, transform 0.2s;
-  animation: fadeUp 0.5s cubic-bezier(0.22,1,0.36,1) both;
+  padding: 1.1rem 1rem;
+  text-align: center; position: relative;
+  overflow: hidden; cursor: default;
+  transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.25s;
+  animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) both;
+  box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.9);
 }
-.stat:hover { transform: translateY(-2px); border-color: var(--border2); }
+.stat:hover { transform: translateY(-4px) scale(1.02); box-shadow: var(--shadow); }
 .stat:nth-child(1){ animation-delay:0.1s }
-.stat:nth-child(2){ animation-delay:0.15s }
-.stat:nth-child(3){ animation-delay:0.2s }
-.stat:nth-child(4){ animation-delay:0.25s }
-.stat::after {
-  content: '';
-  position: absolute; bottom: 0; left: 20%; right: 20%; height: 1px;
-  background: currentColor; opacity: 0.1;
-}
-.stat-n {
-  font-size: 28px; font-weight: 900; line-height: 1;
-  font-variant-numeric: tabular-nums;
-  transition: all 0.4s;
-}
-.stat-l { font-size: 10px; color: var(--text3); margin-top: 5px; font-weight: 500; }
+.stat:nth-child(2){ animation-delay:0.17s }
+.stat:nth-child(3){ animation-delay:0.24s }
+.stat:nth-child(4){ animation-delay:0.31s }
 
-.stat.gold  .stat-n { color: var(--gold2);   }
-.stat.teal  .stat-n { color: var(--teal);     }
-.stat.violet .stat-n { color: var(--violet);  }
-.stat.emerald .stat-n { color: var(--emerald); }
+/* Shimmer effect on stat */
+.stat::before {
+  content: '';
+  position: absolute; top: 0; left: -100%; width: 60%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+  animation: shimmer 4s ease-in-out infinite;
+}
+@keyframes shimmer { 0%{left:-100%} 30%{left:150%} 100%{left:150%} }
+
+.stat-icon { font-size: 20px; margin-bottom: 6px; display: block; }
+.stat-n {
+  font-size: 32px; font-weight: 900; line-height: 1;
+  font-variant-numeric: tabular-nums;
+  transition: all 0.5s cubic-bezier(0.22,1,0.36,1);
+  background: var(--grad);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.stat-l { font-size: 10px; color: var(--ink3); margin-top: 5px; font-weight: 600; letter-spacing: 0.3px; }
+
+.stat.gold   { --grad: linear-gradient(135deg, var(--gold), var(--gold3)); }
+.stat.teal   { --grad: linear-gradient(135deg, var(--teal), var(--teal2)); }
+.stat.violet { --grad: linear-gradient(135deg, var(--violet), #A07FD0); }
+.stat.emerald{ --grad: linear-gradient(135deg, var(--emerald), var(--emerald2)); }
 
 @keyframes fadeUp {
-  from { opacity:0; transform:translateY(16px); }
-  to   { opacity:1; transform:translateY(0);     }
+  from { opacity:0; transform:translateY(20px) scale(0.96); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
 }
 
 /* =========================================================
    PROGRESS BAR
    ========================================================= */
 .prog-wrap {
-  background: var(--bg2);
-  border: 0.5px solid var(--border);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
-  padding: 1rem 1.25rem;
-  margin-bottom: 1.75rem;
-  animation: fadeUp 0.5s 0.3s cubic-bezier(0.22,1,0.36,1) both;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.9);
+  animation: fadeUp 0.6s 0.38s cubic-bezier(0.22,1,0.36,1) both;
+  position: relative; overflow: hidden;
 }
+.prog-wrap::before {
+  content: '';
+  position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold-dim), var(--gold-glow), var(--gold-dim));
+}
+
 .prog-top {
   display: flex; justify-content: space-between; align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
-.prog-label { font-size: 12px; color: var(--text2); font-weight: 500; }
-.prog-pct   { font-size: 14px; font-weight: 700; color: var(--gold2); }
-.prog-pct span { font-size: 11px; color: var(--text3); font-weight: 400; }
+.prog-label { font-size: 12px; color: var(--ink3); font-weight: 700; letter-spacing: 0.5px; }
+.prog-pct { font-size: 15px; font-weight: 900; color: var(--gold); }
+.prog-pct span { font-size: 11px; color: var(--ink4); font-weight: 500; margin-right: 3px; }
 
 .bar-track {
-  height: 5px; background: var(--bg4);
-  border-radius: 3px; overflow: visible;
-  position: relative;
+  height: 8px; background: var(--bg4);
+  border-radius: 6px; overflow: visible; position: relative;
+  box-shadow: inset 0 2px 4px rgba(180,148,80,0.12);
 }
 .bar-fill {
-  height: 100%; border-radius: 3px;
-  background: linear-gradient(90deg, var(--gold) 0%, var(--gold2) 50%, var(--gold3) 100%);
-  transition: width 1s cubic-bezier(0.22,1,0.36,1);
+  height: 100%; border-radius: 6px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold2) 40%, var(--gold3) 70%, var(--gold4) 100%);
+  transition: width 1.2s cubic-bezier(0.22,1,0.36,1);
   position: relative;
-  box-shadow: 0 0 12px rgba(201,146,58,0.5);
+  box-shadow: 0 2px 10px rgba(184,137,42,0.4), 0 0 20px rgba(184,137,42,0.2);
 }
+/* Animated shine on bar */
+.bar-fill::before {
+  content: '';
+  position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%);
+  animation: bar-shine 2.5s ease-in-out infinite;
+  background-size: 200% 100%;
+}
+@keyframes bar-shine {
+  0%{background-position:200% 0} 100%{background-position:-200% 0}
+}
+/* Orb at tip */
 .bar-fill::after {
   content: '';
-  position: absolute; right: -1px; top: -3px;
-  width: 11px; height: 11px; border-radius: 50%;
-  background: var(--gold3);
-  box-shadow: 0 0 10px var(--gold2), 0 0 20px rgba(201,146,58,0.4);
-  transition: opacity 0.3s;
+  position: absolute; right: -5px; top: -4px;
+  width: 16px; height: 16px; border-radius: 50%;
+  background: radial-gradient(circle, var(--gold4) 30%, var(--gold2) 100%);
+  box-shadow: 0 0 12px var(--gold2), 0 0 24px rgba(184,137,42,0.4);
+  transition: opacity 0.4s;
+  animation: orb-pulse 2s ease-in-out infinite;
 }
-.bar-fill.zero::after { opacity: 0; }
+.bar-fill.zero::after { opacity:0; }
+@keyframes orb-pulse {
+  0%,100%{box-shadow:0 0 12px var(--gold2), 0 0 24px rgba(184,137,42,0.4)}
+  50%{box-shadow:0 0 20px var(--gold3), 0 0 40px rgba(184,137,42,0.6)}
+}
 
 .week-markers {
   display: flex; justify-content: space-between;
-  margin-top: 8px; padding: 0 2px;
+  margin-top: 10px; padding: 0 2px;
 }
-.week-marker {
-  font-size: 9px; color: var(--text4); font-weight: 600;
-}
+.week-marker { font-size: 9px; color: var(--ink4); font-weight: 700; letter-spacing: 0.3px; }
 
 /* =========================================================
    SECTION HEADER
    ========================================================= */
 .section-header {
-  display: flex; align-items: center; gap: 10px;
-  margin-bottom: 1rem;
-  animation: fadeUp 0.5s 0.35s cubic-bezier(0.22,1,0.36,1) both;
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 1.25rem;
+  animation: fadeUp 0.6s 0.44s cubic-bezier(0.22,1,0.36,1) both;
 }
 .section-icon {
-  width: 32px; height: 32px;
-  background: var(--gold-dim);
-  border: 0.5px solid rgba(201,146,58,0.2);
-  border-radius: 8px;
+  width: 36px; height: 36px;
+  background: linear-gradient(135deg, var(--gold-dim), rgba(184,137,42,0.04));
+  border: 1px solid rgba(184,137,42,0.25);
+  border-radius: 10px;
   display: flex; align-items: center; justify-content: center;
-  flex-shrink: 0;
+  box-shadow: 0 2px 8px rgba(184,137,42,0.1);
 }
-.section-title { font-size: 13px; font-weight: 700; color: var(--text2); }
-.section-sub   { font-size: 11px; color: var(--text3); margin-top: 1px; }
+.section-title { font-size: 14px; font-weight: 800; color: var(--ink); }
+.section-sub   { font-size: 11px; color: var(--ink3); margin-top: 2px; }
 
 /* =========================================================
    SEARCH
    ========================================================= */
 .search-wrap {
-  margin-bottom: 1.25rem;
-  position: relative;
-  animation: fadeUp 0.5s 0.4s cubic-bezier(0.22,1,0.36,1) both;
+  margin-bottom: 1.5rem; position: relative;
+  animation: fadeUp 0.6s 0.5s cubic-bezier(0.22,1,0.36,1) both;
 }
 .search-icon {
-  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
-  pointer-events: none; color: var(--text3);
+  position: absolute; right: 15px; top: 50%;
+  transform: translateY(-50%); color: var(--ink4); pointer-events: none;
 }
 .search-input {
-  width: 100%; padding: 11px 44px 11px 16px;
+  width: 100%; padding: 12px 48px 12px 18px;
   border-radius: var(--radius-sm);
-  border: 0.5px solid var(--border2);
-  background: var(--bg2);
-  color: var(--text); font-size: 14px;
+  border: 1.5px solid var(--border2);
+  background: var(--card-bg);
+  color: var(--ink); font-size: 14px;
   font-family: 'Cairo', sans-serif;
   outline: none;
-  transition: border-color 0.25s, box-shadow 0.25s;
+  transition: all 0.3s cubic-bezier(0.22,1,0.36,1);
+  box-shadow: var(--shadow-sm);
 }
 .search-input:focus {
-  border-color: rgba(201,146,58,0.5);
-  box-shadow: 0 0 0 3px rgba(201,146,58,0.08);
+  border-color: var(--gold2);
+  box-shadow: var(--shadow-sm), 0 0 0 3px rgba(184,137,42,0.1);
+  background: var(--bg2);
 }
-.search-input::placeholder { color: var(--text4); }
+.search-input::placeholder { color: var(--ink4); }
 
 /* =========================================================
    WEEK DIVIDER
    ========================================================= */
 .week-divider {
-  display: flex; align-items: center; gap: 12px;
-  margin: 1.5rem 0 0.75rem;
-  opacity: 0;
-  animation: fadeIn 0.4s ease both;
+  display: flex; align-items: center; gap: 14px;
+  margin: 2rem 0 1rem; opacity: 0;
+  animation: fadeIn 0.5s ease both;
 }
 .week-divider-line {
   flex: 1; height: 1px;
-  background: linear-gradient(90deg, transparent, var(--border2), transparent);
+  background: linear-gradient(90deg, transparent, var(--border3), transparent);
 }
 .week-divider-label {
   font-size: 9px; font-weight: 800;
-  color: var(--text4); letter-spacing: 1.5px;
+  color: var(--ink3); letter-spacing: 1.5px;
   text-transform: uppercase;
-  background: var(--bg2);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius-xs);
-  padding: 3px 10px;
-  white-space: nowrap;
+  background: var(--card-bg);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 4px 12px; white-space: nowrap;
+  box-shadow: var(--shadow-sm);
 }
 @keyframes fadeIn { to{opacity:1} }
 
@@ -371,388 +446,459 @@ body {
    CARD
    ========================================================= */
 .card {
-  background: var(--bg2);
-  border: 0.5px solid var(--border);
+  background: var(--card-bg);
+  border: 1.5px solid var(--border);
   border-radius: var(--radius);
-  margin-bottom: 8px;
-  overflow: hidden;
+  margin-bottom: 10px; overflow: hidden;
   transition:
-    border-color 0.3s ease,
-    box-shadow 0.3s ease,
-    transform 0.2s ease;
-  cursor: pointer;
-  will-change: transform;
-  opacity: 0;
-  transform: translateY(12px);
-  animation: cardReveal 0.45s cubic-bezier(0.22,1,0.36,1) both;
+    border-color 0.35s cubic-bezier(0.22,1,0.36,1),
+    box-shadow 0.35s cubic-bezier(0.22,1,0.36,1),
+    transform 0.3s cubic-bezier(0.22,1,0.36,1);
+  cursor: pointer; will-change: transform;
+  opacity: 0; transform: translateY(16px);
+  animation: cardReveal 0.55s cubic-bezier(0.22,1,0.36,1) both;
+  box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(255,255,255,0.8);
+  position: relative;
 }
-@keyframes cardReveal {
-  to { opacity:1; transform:translateY(0); }
+/* Left accent strip */
+.card::before {
+  content: '';
+  position: absolute; top: 0; bottom: 0; right: 0; width: 3px;
+  background: linear-gradient(180deg, var(--gold4) 0%, var(--gold) 50%, var(--gold4) 100%);
+  opacity: 0; border-radius: 0 var(--radius) var(--radius) 0;
+  transition: opacity 0.3s ease;
 }
+.card:hover::before { opacity: 1; }
+
+@keyframes cardReveal { to { opacity:1; transform:translateY(0); } }
 .card:hover {
   border-color: var(--border3);
-  box-shadow: var(--shadow-sm);
-  transform: translateY(-1px);
+  box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.9);
+  transform: translateY(-2px);
 }
 .card.is-done {
-  border-color: rgba(52,211,153,0.2);
-  background: linear-gradient(135deg, var(--bg2) 0%, rgba(52,211,153,0.03) 100%);
+  border-color: rgba(42,138,92,0.25);
+  background: linear-gradient(135deg, rgba(255,252,245,0.95) 0%, rgba(42,138,92,0.04) 100%);
 }
-.card.is-done:hover {
-  border-color: rgba(52,211,153,0.35);
-  box-shadow: 0 4px 20px rgba(52,211,153,0.08);
+.card.is-done::before {
+  background: linear-gradient(180deg, rgba(52,168,112,0.6) 0%, var(--emerald2) 50%, rgba(52,168,112,0.6) 100%);
+  opacity: 1;
 }
 
-/* Card Header Row */
+/* Card Row */
 .card-row {
   display: grid;
-  grid-template-columns: 52px 1fr 40px;
+  grid-template-columns: 58px 1fr 36px;
   gap: 14px; align-items: center;
-  padding: 1rem 1.1rem;
+  padding: 1.1rem 1.25rem;
 }
 
 /* Day Badge */
 .day-badge {
-  width: 52px; height: 52px;
-  border-radius: 12px;
+  width: 58px; height: 58px; border-radius: 14px;
   display: flex; flex-direction: column;
   align-items: center; justify-content: center;
   flex-shrink: 0;
-  background: var(--gold-dim);
-  border: 1px solid rgba(201,146,58,0.15);
-  transition: transform 0.2s, box-shadow 0.2s;
+  background: linear-gradient(145deg, var(--gold-dim), rgba(184,137,42,0.04));
+  border: 1.5px solid rgba(184,137,42,0.2);
+  transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
   position: relative; overflow: hidden;
+  box-shadow: 0 2px 10px rgba(184,137,42,0.1);
 }
 .day-badge::before {
   content: '';
   position: absolute; inset: 0;
-  background: linear-gradient(135deg, rgba(201,146,58,0.1) 0%, transparent 60%);
+  background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 60%);
 }
 .card:hover .day-badge {
-  transform: scale(1.05);
-  box-shadow: 0 0 16px rgba(201,146,58,0.2);
+  transform: scale(1.06) rotate(-2deg);
+  box-shadow: 0 6px 20px rgba(184,137,42,0.25);
+  border-color: rgba(184,137,42,0.4);
 }
 .day-badge .d-label {
-  font-size: 7.5px; font-weight: 800; color: var(--gold);
-  letter-spacing: 1px; line-height: 1;
-  opacity: 0.8;
+  font-size: 7px; font-weight: 900; color: var(--gold);
+  letter-spacing: 1.5px; line-height: 1; opacity: 0.7;
+  font-family: 'Cinzel', serif;
 }
 .day-badge .d-num {
-  font-size: 18px; font-weight: 900; color: var(--gold2);
+  font-size: 22px; font-weight: 900; color: var(--gold);
   line-height: 1.1;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .is-done .day-badge {
-  background: var(--emerald-dim);
-  border-color: rgba(52,211,153,0.2);
+  background: linear-gradient(145deg, rgba(42,138,92,0.1), rgba(42,138,92,0.04));
+  border-color: rgba(42,138,92,0.3);
+  box-shadow: 0 2px 10px rgba(42,138,92,0.15);
+}
+.is-done .day-badge .d-num {
+  background: linear-gradient(135deg, var(--emerald), var(--emerald2));
+  -webkit-background-clip: text; background-clip: text;
 }
 .is-done .day-badge .d-label { color: var(--emerald); }
-.is-done .day-badge .d-num   { color: var(--emerald); }
 
 /* Card Body */
 .card-body { min-width: 0; }
-.card-tags  {
+.card-tags {
   display: flex; align-items: center; gap: 6px;
-  margin-bottom: 5px; flex-wrap: wrap;
+  margin-bottom: 6px; flex-wrap: wrap;
 }
 .tag {
-  font-size: 9px; font-weight: 800; padding: 2px 8px;
+  font-size: 9px; font-weight: 800; padding: 3px 9px;
   border-radius: 20px; letter-spacing: 0.5px;
   text-transform: uppercase; white-space: nowrap;
+  transition: transform 0.2s;
 }
-.tag-mindset       { background: var(--gold-dim);    color: var(--gold2);   border: 0.5px solid rgba(201,146,58,0.2);  }
-.tag-communication { background: var(--teal-dim);    color: var(--teal);    border: 0.5px solid rgba(56,189,248,0.2);  }
-.tag-performance   { background: var(--emerald-dim); color: var(--emerald); border: 0.5px solid rgba(52,211,153,0.2);  }
-.tag-decision      { background: var(--coral-dim);   color: var(--coral);   border: 0.5px solid rgba(251,113,133,0.2); }
-.tag-culture       { background: var(--violet-dim);  color: var(--violet);  border: 0.5px solid rgba(167,139,250,0.2); }
-.tag-hr            { background: var(--violet-dim);  color: var(--violet);  border: 0.5px solid rgba(167,139,250,0.2); }
-.tag-motivation    { background: var(--gold-dim);    color: var(--gold2);   border: 0.5px solid rgba(201,146,58,0.2);  }
+.tag:hover { transform: scale(1.05); }
+.tag-mindset       { background:var(--gold-dim);    color:var(--gold);    border:1px solid rgba(184,137,42,0.2); }
+.tag-communication { background:var(--teal-dim);    color:var(--teal);    border:1px solid rgba(26,122,138,0.2); }
+.tag-performance   { background:var(--emerald-dim); color:var(--emerald); border:1px solid rgba(42,138,92,0.2); }
+.tag-decision      { background:var(--coral-dim);   color:var(--coral);   border:1px solid rgba(192,80,80,0.2); }
+.tag-culture       { background:var(--violet-dim);  color:var(--violet);  border:1px solid rgba(123,94,167,0.2); }
+.tag-hr            { background:var(--violet-dim);  color:var(--violet);  border:1px solid rgba(123,94,167,0.2); }
+.tag-motivation    { background:var(--gold-dim);    color:var(--gold);    border:1px solid rgba(184,137,42,0.2); }
 
 .card-title {
-  font-size: 14px; font-weight: 700; color: var(--text);
-  line-height: 1.4; letter-spacing: -0.2px;
+  font-size: 14px; font-weight: 800; color: var(--ink);
+  line-height: 1.45; letter-spacing: -0.2px;
 }
 
 /* Chevron */
 .card-chevron {
-  width: 28px; height: 28px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 8px; flex-shrink: 0;
+  width: 32px; height: 32px; display: flex;
+  align-items: center; justify-content: center;
+  border-radius: 10px; flex-shrink: 0;
   background: var(--bg3);
-  border: 0.5px solid var(--border);
-  color: var(--text3);
-  transition: all 0.25s;
+  border: 1px solid var(--border);
+  color: var(--ink4);
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
 }
 .card:hover .card-chevron {
-  background: var(--bg4); color: var(--gold2);
-  border-color: rgba(201,146,58,0.2);
+  background: var(--gold-dim); color: var(--gold);
+  border-color: rgba(184,137,42,0.3);
 }
-.card-chevron svg { transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); }
+.card-chevron svg { transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+.card.expanded .card-chevron { background: var(--gold-dim); color: var(--gold); border-color: rgba(184,137,42,0.3); }
 .card.expanded .card-chevron svg { transform: rotate(180deg); }
 
 /* Card Content */
 .card-content {
   max-height: 0; overflow: hidden;
-  transition: max-height 0.45s cubic-bezier(0.22,1,0.36,1),
-              opacity 0.3s ease;
+  transition: max-height 0.55s cubic-bezier(0.22,1,0.36,1),
+              opacity 0.35s ease;
   opacity: 0;
 }
-.card.expanded .card-content {
-  max-height: 600px; opacity: 1;
-}
+.card.expanded .card-content { max-height: 700px; opacity: 1; }
 
 .card-inner {
-  padding: 0 1.1rem 1.1rem;
-  border-top: 0.5px solid var(--border);
-  padding-top: 1rem;
+  padding: 0 1.25rem 1.25rem;
+  border-top: 1px solid var(--border);
+  padding-top: 1.1rem;
 }
 
+/* Story */
 .story-text {
-  font-size: 13px; color: var(--text2); line-height: 1.8;
-  font-weight: 400;
+  font-size: 13.5px; color: var(--ink2); line-height: 1.85;
+  font-weight: 400; position: relative;
+}
+/* Opening quote mark */
+.story-text::before {
+  content: '"';
+  font-size: 60px; color: rgba(184,137,42,0.12);
+  font-family: 'Cinzel', serif; line-height: 0.6;
+  float: right; margin-left: 8px;
 }
 
 /* Moral Block */
 .moral-block {
-  margin-top: 12px;
-  padding: 12px 14px;
+  margin-top: 14px; padding: 14px 16px;
   border-radius: var(--radius-sm);
-  background: var(--gold-dim);
-  border: 0.5px solid rgba(201,146,58,0.15);
-  border-right: 3px solid var(--gold);
-  display: flex; gap: 10px; align-items: flex-start;
+  background: linear-gradient(135deg, var(--gold-dim), rgba(184,137,42,0.04));
+  border: 1px solid rgba(184,137,42,0.18);
+  border-right: 4px solid var(--gold);
+  display: flex; gap: 12px; align-items: flex-start;
+  box-shadow: 0 2px 12px rgba(184,137,42,0.08);
+  transition: box-shadow 0.3s;
 }
-.moral-icon {
-  width: 20px; height: 20px; flex-shrink: 0; margin-top: 1px;
-  color: var(--gold2);
-}
-.moral-text {
-  font-size: 12.5px; color: var(--gold3); line-height: 1.6;
-  font-weight: 600;
-}
+.moral-block:hover { box-shadow: 0 4px 20px rgba(184,137,42,0.15); }
+.moral-icon { width: 22px; height: 22px; flex-shrink: 0; margin-top: 1px; color: var(--gold); }
+.moral-text { font-size: 12.5px; color: var(--ink); line-height: 1.65; font-weight: 700; }
 
 /* Goal Block */
 .goal-block {
-  margin-top: 10px;
-  padding: 10px 14px;
+  margin-top: 10px; padding: 12px 16px;
   border-radius: var(--radius-sm);
   background: var(--teal-dim);
-  border: 0.5px solid rgba(56,189,248,0.12);
-  border-right: 3px solid var(--teal);
-  display: flex; gap: 10px; align-items: flex-start;
+  border: 1px solid rgba(26,122,138,0.15);
+  border-right: 4px solid var(--teal);
+  display: flex; gap: 12px; align-items: flex-start;
+  transition: box-shadow 0.3s;
 }
-.goal-icon {
-  width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px;
-  color: var(--teal);
-}
-.goal-text {
-  font-size: 12px; color: var(--teal); line-height: 1.6;
-}
+.goal-block:hover { box-shadow: 0 4px 16px rgba(26,122,138,0.1); }
+.goal-icon { width: 18px; height: 18px; flex-shrink: 0; margin-top: 2px; color: var(--teal); }
+.goal-text { font-size: 12px; color: var(--teal); line-height: 1.65; font-weight: 600; }
 
 /* Card Footer */
 .card-footer {
-  margin-top: 14px; padding-top: 12px;
-  border-top: 0.5px solid var(--border);
+  margin-top: 16px; padding-top: 14px;
+  border-top: 1px solid var(--border);
   display: flex; align-items: center; justify-content: space-between;
 }
 
 .done-btn {
   display: flex; align-items: center; gap: 8px;
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border2);
-  background: var(--bg3);
-  color: var(--text2);
-  font-family: 'Cairo', sans-serif;
-  font-size: 12px; font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s;
+  padding: 9px 18px; border-radius: 10px;
+  border: 1.5px solid var(--border2);
+  background: linear-gradient(135deg, var(--bg2), var(--bg3));
+  color: var(--ink2); font-family: 'Cairo', sans-serif;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow: 0 2px 8px rgba(100,80,40,0.06);
 }
 .done-btn:hover:not(.is-marked) {
-  border-color: rgba(52,211,153,0.4);
-  color: var(--emerald);
-  background: var(--emerald-dim);
+  border-color: rgba(42,138,92,0.4);
+  color: var(--emerald); background: var(--emerald-dim);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(42,138,92,0.15);
 }
 .done-btn.is-marked {
-  border-color: rgba(52,211,153,0.3);
-  color: var(--emerald);
-  background: var(--emerald-dim);
+  border-color: rgba(42,138,92,0.35);
+  color: var(--emerald); background: var(--emerald-dim);
+  box-shadow: 0 4px 16px rgba(42,138,92,0.12);
 }
-.done-btn .btn-icon {
-  width: 16px; height: 16px;
-  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
-}
-.done-btn.is-marked .btn-icon { transform: scale(1.2); }
+.done-btn .btn-icon { width: 17px; height: 17px; transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+.done-btn.is-marked .btn-icon { transform: scale(1.25) rotate(-5deg); }
 
 .done-date {
-  font-size: 10px; color: var(--text3);
+  font-size: 10px; color: var(--ink4);
   display: flex; align-items: center; gap: 5px;
 }
 .done-date svg { width: 12px; height: 12px; }
 
 /* =========================================================
+   CONFETTI / SPARKLE on complete
+   ========================================================= */
+.sparkle {
+  position: fixed; pointer-events: none; z-index: 999;
+  width: 10px; height: 10px; border-radius: 50%;
+  animation: sparkle-fly 0.9s ease-out forwards;
+}
+@keyframes sparkle-fly {
+  0%   { transform: translate(0,0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(0); opacity: 0; }
+}
+
+/* =========================================================
    EMPTY STATE
    ========================================================= */
 .empty-state {
-  text-align: center; padding: 4rem 2rem;
-  color: var(--text3);
+  text-align: center; padding: 5rem 2rem; color: var(--ink4);
 }
-.empty-icon { margin: 0 auto 1rem; width: 48px; height: 48px; color: var(--text4); }
-.empty-text { font-size: 14px; }
+.empty-icon { margin: 0 auto 1rem; width: 52px; height: 52px; }
+.empty-text { font-size: 14px; font-weight: 600; }
 
 /* =========================================================
-   TOAST NOTIFICATION
+   TOAST
    ========================================================= */
 .toast-container {
   position: fixed; bottom: 2rem; left: 50%; transform: translateX(-50%);
-  z-index: 100; pointer-events: none;
+  z-index: 1000; pointer-events: none;
   display: flex; flex-direction: column; align-items: center; gap: 8px;
 }
 .toast {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 20px;
-  background: var(--bg3);
-  border: 0.5px solid var(--border3);
+  padding: 10px 22px;
+  background: rgba(255,252,245,0.96);
+  border: 1.5px solid var(--border3);
   border-radius: 40px;
-  font-size: 13px; font-weight: 600;
+  font-size: 13px; font-weight: 700;
   box-shadow: var(--shadow);
-  animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both,
-             toastOut 0.3s ease 2.5s both;
+  animation: toastIn 0.5s cubic-bezier(0.34,1.56,0.64,1) both,
+             toastOut 0.3s ease 2.6s both;
   backdrop-filter: blur(20px);
-  white-space: nowrap;
+  white-space: nowrap; color: var(--ink);
 }
-.toast.success { color: var(--emerald); border-color: rgba(52,211,153,0.2); }
-.toast.info    { color: var(--teal);    border-color: rgba(56,189,248,0.2);  }
-.toast.warn    { color: var(--gold2);   border-color: rgba(201,146,58,0.2);  }
-.toast svg { width: 16px; height: 16px; }
+.toast.success { color: var(--emerald); border-color: rgba(42,138,92,0.3); }
+.toast.info    { color: var(--teal);    border-color: rgba(26,122,138,0.3); }
+.toast.warn    { color: var(--gold);    border-color: rgba(184,137,42,0.3); }
+.toast svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-@keyframes toastIn  { from{opacity:0;transform:translateY(20px) scale(0.9)} to{opacity:1;transform:translateY(0) scale(1)} }
-@keyframes toastOut { from{opacity:1} to{opacity:0;transform:translateY(10px)} }
-
-/* =========================================================
-   OFFLINE BANNER
-   ========================================================= */
-.offline-banner {
-  display: none;
-  background: rgba(251,113,133,0.1);
-  border: 0.5px solid rgba(251,113,133,0.2);
-  border-radius: var(--radius-sm);
-  padding: 10px 16px;
-  margin-bottom: 1rem;
-  font-size: 12px; color: var(--coral);
-  text-align: center;
-  animation: fadeUp 0.3s ease;
-}
-.offline-banner.show { display: block; }
+@keyframes toastIn  { from{opacity:0;transform:translateY(24px) scale(0.85)} to{opacity:1;transform:translateY(0) scale(1)} }
+@keyframes toastOut { from{opacity:1} to{opacity:0;transform:translateY(12px)} }
 
 /* =========================================================
    SCROLL TO TOP
    ========================================================= */
 .scroll-top {
-  position: fixed; bottom: 2rem; left: 1.5rem;
-  width: 40px; height: 40px;
-  background: var(--bg3); border: 0.5px solid var(--border2);
+  position: fixed; bottom: 2rem; left: 2rem;
+  width: 44px; height: 44px;
+  background: var(--card-bg); border: 1.5px solid var(--border2);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
-  cursor: pointer; color: var(--text2);
-  opacity: 0; transform: translateY(10px);
-  transition: all 0.3s;
-  z-index: 50; box-shadow: var(--shadow-sm);
+  cursor: pointer; color: var(--ink3);
+  opacity: 0; transform: translateY(14px);
+  transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  z-index: 50; box-shadow: var(--shadow);
 }
 .scroll-top.show { opacity: 1; transform: translateY(0); }
-.scroll-top:hover { color: var(--gold2); border-color: rgba(201,146,58,0.3); }
+.scroll-top:hover { color: var(--gold); border-color: rgba(184,137,42,0.4); transform: translateY(-3px) scale(1.1); }
 .scroll-top svg { width: 18px; height: 18px; }
+
+/* =========================================================
+   OFFLINE BANNER
+   ========================================================= */
+.offline-banner {
+  display: none; background: rgba(192,80,80,0.08);
+  border: 1px solid rgba(192,80,80,0.25);
+  border-radius: var(--radius-sm);
+  padding: 10px 18px; margin-bottom: 1rem;
+  font-size: 12px; color: var(--coral);
+  text-align: center; animation: fadeUp 0.3s ease;
+}
+.offline-banner.show { display: block; }
+
+/* =========================================================
+   FLOATING PARTICLES (decorative)
+   ========================================================= */
+.particles { position:fixed; inset:0; pointer-events:none; z-index:1; overflow:hidden; }
+.particle {
+  position: absolute; border-radius: 50%;
+  animation: float-particle linear infinite;
+  opacity: 0;
+}
+@keyframes float-particle {
+  0%   { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+  10%  { opacity: var(--op); }
+  90%  { opacity: var(--op); }
+  100% { transform: translateY(-20px) rotate(360deg); opacity: 0; }
+}
 
 /* =========================================================
    RESPONSIVE
    ========================================================= */
-@media (max-width: 520px) {
+@media (max-width: 540px) {
   .stats { grid-template-columns: repeat(2, 1fr); }
   .header-meta { display: none; }
-  .card-row { grid-template-columns: 46px 1fr 36px; gap: 10px; }
+  .card-row { grid-template-columns: 50px 1fr 32px; gap: 10px; }
   .app { padding: 1.25rem 1rem 5rem; }
+  .header { padding: 1.25rem 1.25rem; gap: 1rem; }
+  .header-text h1 { font-size: 14px; }
+  .horus-wrap { width: 58px; height: 58px; }
 }
 </style>
 </head>
 <body>
 
-<!-- Ambient background -->
-<div class="ambient">
-  <div class="ambient-orb a"></div>
-  <div class="ambient-orb b"></div>
-  <div class="ambient-orb c"></div>
+<!-- Background -->
+<div class="bg-layer">
+  <div class="bg-paper"></div>
+  <div class="bg-grain"></div>
+  <div class="bg-lines"></div>
 </div>
-<div class="grain"></div>
+
+<!-- Floating particles -->
+<div class="particles" id="particles"></div>
 
 <div class="app" id="app">
 
   <!-- OFFLINE BANNER -->
   <div class="offline-banner" id="offlineBanner">
-    <svg style="width:14px;height:14px;display:inline;margin-left:6px" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 1l22 22M16.72 11.06A10.94 10.94 0 0 1 19 12.55M5 12.55a10.94 10.94 0 0 1 5.17-2.39M10.71 5.05A16 16 0 0 1 22.56 9M1.42 9a15.91 15.91 0 0 1 4.7-2.88M8.53 16.11a6 6 0 0 1 6.95 0M12 20h.01"/></svg>
-    تشتغل offline — التغييرات محفوظة محلياً وهتتزامن لما الاتصال يرجع
+    ⚡ تشتغل offline — التغييرات محفوظة محلياً وهتتزامن لما الاتصال يرجع
   </div>
 
   <!-- HEADER -->
   <header class="header">
-    <div class="header-emblem">
-      <!-- Crown / Leadership emblem SVG -->
-      <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="28" cy="28" r="27" stroke="url(#gCircle)" stroke-width="0.75" opacity="0.4"/>
-        <!-- Crown shape -->
-        <path d="M12 36 L16 20 L22 28 L28 16 L34 28 L40 20 L44 36 Z" fill="url(#gCrown)" opacity="0.9"/>
-        <!-- Crown base line -->
-        <rect x="12" y="36" width="32" height="3" rx="1.5" fill="url(#gBar)"/>
-        <!-- Jewels -->
-        <circle cx="28" cy="15" r="2" fill="#F5D080"/>
-        <circle cx="16" cy="20" r="1.5" fill="#E8B65A"/>
-        <circle cx="40" cy="20" r="1.5" fill="#E8B65A"/>
-        <!-- 90 text -->
-        <text x="28" y="50" text-anchor="middle" font-size="7" font-weight="900" fill="#C9923A" font-family="serif" opacity="0.9">LEADER</text>
+    <!-- Corner ornaments -->
+    <div class="header-corner tl">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 2 L2 14 M2 2 L14 2" stroke="#B8892A" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="2" cy="2" r="2" fill="#B8892A"/>
+      </svg>
+    </div>
+    <div class="header-corner br">
+      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M2 2 L2 14 M2 2 L14 2" stroke="#B8892A" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="2" cy="2" r="2" fill="#B8892A"/>
+      </svg>
+    </div>
+
+    <!-- EYE OF HORUS LOGO -->
+    <div class="horus-wrap">
+      <div class="horus-ring"></div>
+      <div class="horus-bg"></div>
+      <!-- Eye of Horus SVG -->
+      <svg class="horus-svg" viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Outer eye shape -->
+        <path d="M5 40 Q50 5 95 40 Q50 75 5 40 Z" stroke="#B8892A" stroke-width="2.5" fill="none"/>
+        <!-- Iris -->
+        <circle cx="50" cy="40" r="17" fill="url(#irisGrad)" stroke="#B8892A" stroke-width="1.5"/>
+        <!-- Pupil -->
+        <circle cx="50" cy="40" r="8" fill="url(#pupilGrad)"/>
+        <!-- Pupil highlight -->
+        <circle cx="54" cy="36" r="3" fill="rgba(255,255,255,0.5)"/>
+        <!-- Eye corner left (tear drop) -->
+        <path d="M5 40 Q0 45 3 52 Q5 48 10 46" stroke="#B8892A" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Eye lashes top right -->
+        <line x1="75" y1="22" x2="80" y2="15" stroke="#B8892A" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="85" y1="28" x2="92" y2="22" stroke="#B8892A" stroke-width="1.5" stroke-linecap="round"/>
+        <!-- Horus tail mark -->
+        <path d="M5 42 Q-5 55 10 65 Q8 55 20 50" stroke="#C9923A" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Eyebrow mark -->
+        <path d="M20 18 Q50 8 80 18" stroke="#B8892A" stroke-width="2" fill="none" stroke-linecap="round" opacity="0.6"/>
+        <!-- Ra dot (sun) top -->
+        <circle cx="50" cy="10" r="4" fill="url(#sunGrad)" opacity="0.8"/>
         <defs>
-          <linearGradient id="gCrown" x1="12" y1="16" x2="44" y2="36" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#F5D080"/>
-            <stop offset="100%" stop-color="#C9923A"/>
-          </linearGradient>
-          <linearGradient id="gBar" x1="12" y1="0" x2="44" y2="0" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#C9923A" stop-opacity="0.3"/>
-            <stop offset="50%" stop-color="#E8B65A"/>
-            <stop offset="100%" stop-color="#C9923A" stop-opacity="0.3"/>
-          </linearGradient>
-          <linearGradient id="gCircle" x1="0" y1="0" x2="56" y2="56" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#F5D080"/>
-            <stop offset="100%" stop-color="#C9923A" stop-opacity="0"/>
-          </linearGradient>
+          <radialGradient id="irisGrad" cx="40%" cy="35%" r="60%">
+            <stop offset="0%" stop-color="#E8C46A"/>
+            <stop offset="50%" stop-color="#C9923A"/>
+            <stop offset="100%" stop-color="#8A6020"/>
+          </radialGradient>
+          <radialGradient id="pupilGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#3A2810"/>
+            <stop offset="100%" stop-color="#1A1008"/>
+          </radialGradient>
+          <radialGradient id="sunGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#F5D980"/>
+            <stop offset="100%" stop-color="#B8892A"/>
+          </radialGradient>
         </defs>
       </svg>
     </div>
 
     <div class="header-text">
-      <h1>90-Day Leadership Tracker</h1>
-      <p>رحلة القيادة — معلومة يومية لـ Team Leaders</p>
+      <h1>90-DAY LEADERSHIP</h1>
+      <div class="subtitle-ar">رحلة القيادة — معلومة يومية لـ Team Leaders</div>
+      <p>من الإدارة إلى القيادة الحقيقية</p>
     </div>
 
     <div class="header-meta">
-      <div class="sync-indicator">
+      <div class="sync-chip">
         <div class="sync-dot" id="syncDot"></div>
-        <span id="syncLabel">لا يوجد اتصال</span>
+        <span id="syncLabel">انتظر...</span>
       </div>
-      <div class="header-date-val" id="todayLabel"></div>
+      <div class="header-date" id="todayLabel"></div>
     </div>
   </header>
 
   <!-- STATS -->
   <div class="stats">
     <div class="stat gold">
+      <span class="stat-icon">👑</span>
       <div class="stat-n" id="sDone">0</div>
       <div class="stat-l">يوم مكتمل</div>
     </div>
     <div class="stat teal">
+      <span class="stat-icon">🎯</span>
       <div class="stat-n" id="sRemain">90</div>
       <div class="stat-l">يوم متبقي</div>
     </div>
     <div class="stat violet">
+      <span class="stat-icon">📅</span>
       <div class="stat-n" id="sWeek">—</div>
       <div class="stat-l">الأسبوع الحالي</div>
     </div>
     <div class="stat emerald">
+      <span class="stat-icon">🔥</span>
       <div class="stat-n" id="sStreak">0</div>
       <div class="stat-l">streak متتالي</div>
     </div>
@@ -761,7 +907,7 @@ body {
   <!-- PROGRESS BAR -->
   <div class="prog-wrap">
     <div class="prog-top">
-      <span class="prog-label">التقدم في الرحلة</span>
+      <span class="prog-label">🏺 التقدم في الرحلة</span>
       <span class="prog-pct" id="pctLabel">0% <span>من 90 يوم</span></span>
     </div>
     <div class="bar-track">
@@ -778,7 +924,7 @@ body {
   <!-- SECTION HEADER -->
   <div class="section-header">
     <div class="section-icon">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" color="var(--gold2)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2.5">
         <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
         <circle cx="9" cy="7" r="4"/>
         <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
@@ -786,27 +932,27 @@ body {
       </svg>
     </div>
     <div>
-      <div class="section-title">Team Leaders — 90 درساً في القيادة</div>
-      <div class="section-sub">اضغط على أي كارد لتفتح القصة والدرس</div>
+      <div class="section-title">90 درساً في فن القيادة</div>
+      <div class="section-sub">اضغط على أي كارد لتفتح القصة والدرس والهدف اليومي</div>
     </div>
   </div>
 
   <!-- SEARCH -->
   <div class="search-wrap">
     <div class="search-icon">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
         <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
       </svg>
     </div>
     <input class="search-input" id="searchInput" type="text"
-           placeholder="ابحث عن قصة أو مهارة أو كلمة..."
+           placeholder="ابحث عن قصة، مهارة، أو كلمة..."
            oninput="renderCards()">
   </div>
 
-  <!-- CARDS CONTAINER -->
+  <!-- CARDS -->
   <div id="cardsContainer"></div>
 
-</div><!-- /app -->
+</div>
 
 <!-- Scroll to top -->
 <div class="scroll-top" id="scrollTop" onclick="window.scrollTo({top:0,behavior:'smooth'})">
@@ -815,19 +961,18 @@ body {
   </svg>
 </div>
 
-<!-- Toast container -->
+<!-- Toast -->
 <div class="toast-container" id="toastContainer"></div>
 
-<!-- =========================================================
-     DATA
-     ========================================================= -->
 <script>
 // ============================================================
-// ✏️ ضع هنا الـ URL بعد Deploy على Google Apps Script
+// Google Apps Script URL
 // ============================================================
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsxo1nlp2HNepNJnjMstA_15QLZa5880aYnmvHD7jHgyr3-QQeT-wioC1f2D2JX9VO/exec";
-// ============================================================
 
+// ============================================================
+// DATA
+// ============================================================
 const TL_DATA = [
 {day:1,tag:'mindset',title:'الفرق بين المدير والقائد',story:'كان فيه مدير في شركة كبيرة بيقول لناسه دايماً "اعمل كدا عشان أنا قلتلك". جه واحد تاني قعد مكانه وبدأ يشرح ليه كل قرار. الناس فضلت تشتغل حتى لما المدير مش موجود لأنهم فاهمين الهدف.',moral:'القائد بيوضح الـ WHY، المدير بيقول الـ WHAT. وضّح لتيمك دايماً الغرض من أي تاسك.',goal:'هدف اليوم: قول لواحد في التيم ليه بتطلب منه حاجة، مش بس إيه الحاجة.'},
 {day:2,tag:'communication',title:'قاعدة الـ 3 ثواني قبل الرد',story:'عالم نفس اسمه Victor Frankl قال: "بين المحفز والاستجابة فيه مساحة — هذه المساحة هي حريتنا". المدير اللي بيرد على أي مشكلة على طول بيحل المشكلة الغلط في معظم الأوقات.',moral:'قبل ما ترد على أي موقف صعب، خد 3 ثواني صمت. اللي بيتحكم في ردود فعله بيتحكم في فريقه.',goal:'هدف اليوم: لما يجيلك موقف محرج، اتنفس وفكر 3 ثواني قبل الكلام.'},
@@ -892,7 +1037,7 @@ const TL_DATA = [
 {day:61,tag:'mindset',title:'The Long Game — الملعب البعيد',story:'Jeff Bezos بيقول إن أغلب مشاكل الـ business جاية من التفكير على مدى 3 سنين بدل 7. الـ TL اللي بيفكر في الأمد البعيد بياخد قرارات أحسن.',moral:'التضحيات الصغيرة النهارده لها عوائد كبيرة بكره. علّم تيمك يفكر بـ long-term.',goal:'هدف اليوم: خد قرار كنت بتأجله عشان صعب دلوقتي بس صح على المدى البعيد.'},
 {day:62,tag:'performance',title:'مبدأ الـ Spaced Repetition',story:'عالم نفس اسمه Ebbinghaus اكتشف منحنى النسيان: الناس بتنسى 70% من المعلومات الجديدة في أول 24 ساعة. الحل: مراجعة المعلومات على فترات متباعدة.',moral:'المعلومة اللي بتديها للتيم لازم تتراجع وتتكرر. مش كفاية تقولها مرة واحدة.',goal:'هدف اليوم: راجع مع التيم معلومة قيّمة قلتها الأسبوع الفات.'},
 {day:63,tag:'communication',title:'قوة الصمت في القيادة',story:'في المفاوضات، الشخص اللي بيملأ الصمت بأول كلمة غالباً هو الأضعف. Chris Voss بيقول إن الصمت أداة تفاوضية فعّالة جداً.',moral:'الصمت مش ضعف. أحياناً اللي مش بتقوله أقوى من اللي بتقوله.',goal:'هدف اليوم: في محادثة صعبة، بعد ما تسأل سؤال مهم، صمت واستنى الإجابة.'},
-{day:64,tag:'mindset',title:'Memento Mori — تذكر الموت',story:'الرواقيون كانوا بيفكروا في الموت كل يوم — مش حزناً لكن كـ reminder إن الوقت محدود. Steve Jobs بيقول إن إدراكه للوت خلاه مش يضيع وقت في حاجات مش مهمة.',moral:'الوقت المورد الوحيد اللي ما بيتعوّضش. استخدم وقتك ووقت تيمك في اللي يستحق.',goal:'هدف اليوم: اسأل نفسك: لو عندي 6 شهور بس، إيه اللي كنت هاعمله مختلف في تيمي؟'},
+{day:64,tag:'mindset',title:'Memento Mori — تذكر الموت',story:'الرواقيون كانوا بيفكروا في الموت كل يوم — مش حزناً لكن كـ reminder إن الوقت محدود. Steve Jobs بيقول إن إدراكه للموت خلاه مش يضيع وقت في حاجات مش مهمة.',moral:'الوقت المورد الوحيد اللي ما بيتعوّضش. استخدم وقتك ووقت تيمك في اللي يستحق.',goal:'هدف اليوم: اسأل نفسك: لو عندي 6 شهور بس، إيه اللي كنت هاعمله مختلف في تيمي؟'},
 {day:65,tag:'culture',title:'مفهوم الـ Belonging',story:'Brené Brown أثبتت إن "الانتماء" هو الحاجة الأكتر أساسية للإنسان. الناس اللي بتحس إنها "تنتمي" لتيمها بتأدي أحسن بكتير.',moral:'بنِ إحساس بالانتماء في تيمك. الناس مش بتشتغل لـ شركات، بتشتغل لـ أناس وأفكار.',goal:'هدف اليوم: اعمل حاجة بتثبت لكل واحد في التيم إنه مهم ومحتاج.'},
 {day:66,tag:'performance',title:'مبدأ الـ Deliberate Practice',story:'Anders Ericsson درس أساطير البيانو والشطرنج والرياضة. لاقى إن النجاح مش بيجي من "التمرين الاعتيادي" — بيجي من "التمرين المتعمد": ركيز على الضعف وخروج من منطقة الراحة.',moral:'الممارسة مش كافية. الممارسة المتعمدة على الضعف هي اللي بتطوّر.',goal:'هدف اليوم: حدد مهارة ضعيفة عند كل فرد في التيم وصمم تمرين عليها.'},
 {day:67,tag:'decision',title:'The 2-Minute Rule',story:'David Allen في كتاب Getting Things Done قال: لو الحاجة بتاخد أقل من دقيقتين، اعملها دلوقتي. التأجيل نفسه بياخد وقت ذهني أكبر من الفعل.',moral:'خلص الحاجات الصغيرة على طول. التأجيل وهم إنك بتوفر وقت.',goal:'هدف اليوم: خد أول 3 حاجات على قايمتك بتاخد أقل من دقيقتين واعملها دلوقتي.'},
@@ -922,32 +1067,30 @@ const TL_DATA = [
 ];
 
 // =========================================================
-// STATE MANAGEMENT
+// STATE
 // =========================================================
-let state = {};        // { "tl_1": "1 يناير", ... }
-let syncStatus = 'idle'; // idle | syncing | ok | error | offline
-let pendingSync = {};  // operations waiting to be synced
+let state = {};
+let syncStatus = 'idle';
+let pendingSync = {};
 let isOnline = navigator.onLine;
 
-// Load from localStorage first (instant)
 function loadLocalState() {
   try {
-    const saved = localStorage.getItem('tl90_state');
-    if (saved) state = JSON.parse(saved);
-    const pending = localStorage.getItem('tl90_pending');
-    if (pending) pendingSync = JSON.parse(pending);
+    const s = localStorage.getItem('tl90_state_v2');
+    if (s) state = JSON.parse(s);
+    const p = localStorage.getItem('tl90_pending_v2');
+    if (p) pendingSync = JSON.parse(p);
   } catch(e) {}
 }
-
 function saveLocalState() {
   try {
-    localStorage.setItem('tl90_state', JSON.stringify(state));
-    localStorage.setItem('tl90_pending', JSON.stringify(pendingSync));
+    localStorage.setItem('tl90_state_v2', JSON.stringify(state));
+    localStorage.setItem('tl90_pending_v2', JSON.stringify(pendingSync));
   } catch(e) {}
 }
 
 // =========================================================
-// GOOGLE SHEETS API
+// API
 // =========================================================
 async function callScript(action, params = {}) {
   if (!SCRIPT_URL) return null;
@@ -959,9 +1102,7 @@ async function callScript(action, params = {}) {
     const data = await res.json();
     if (data.status === 'ok') return data.data;
     return null;
-  } catch(e) {
-    return null;
-  }
+  } catch(e) { return null; }
 }
 
 async function syncFromServer() {
@@ -969,7 +1110,6 @@ async function syncFromServer() {
   setSyncStatus('syncing');
   const data = await callScript('getAll');
   if (data !== null) {
-    // Merge: server wins for clean state, but keep local if server doesn't have it
     Object.assign(state, data);
     saveLocalState();
     setSyncStatus('ok');
@@ -982,32 +1122,22 @@ async function syncFromServer() {
 async function syncPendingToServer() {
   if (!SCRIPT_URL || !isOnline) return;
   const ops = Object.entries(pendingSync);
-  if (ops.length === 0) return;
+  if (!ops.length) return;
   setSyncStatus('syncing');
   for (const [key, op] of ops) {
-    let result;
-    if (op.action === 'done') {
-      result = await callScript('setDone', { key, date: op.date });
-    } else {
-      result = await callScript('setUndone', { key });
-    }
-    if (result !== null) {
-      delete pendingSync[key];
-    }
+    const result = op.action === 'done'
+      ? await callScript('setDone', { key, date: op.date })
+      : await callScript('setUndone', { key });
+    if (result !== null) delete pendingSync[key];
   }
   saveLocalState();
-  if (Object.keys(pendingSync).length === 0) {
-    setSyncStatus('ok');
-  } else {
-    setSyncStatus('error');
-  }
+  setSyncStatus(Object.keys(pendingSync).length === 0 ? 'ok' : 'error');
 }
 
 async function toggleItem(dayNum, e) {
   e.stopPropagation();
   const key = 'tl_' + dayNum;
   const wasDone = !!state[key];
-
   if (wasDone) {
     delete state[key];
     pendingSync[key] = { action: 'undone' };
@@ -1015,84 +1145,109 @@ async function toggleItem(dayNum, e) {
     const date = new Date().toLocaleDateString('ar-EG', { day: 'numeric', month: 'short' });
     state[key] = date;
     pendingSync[key] = { action: 'done', date };
-    showToast('تم تحديد اليوم ' + dayNum + ' كمكتمل ✓', 'success');
-    // Micro-celebration
-    celebrateCard(key);
+    showToast('أحسنت! اليوم ' + dayNum + ' اكتمل ✓', 'success');
+    fireSparkles(e);
   }
-
   saveLocalState();
   updateUI();
   renderCards();
-
-  // Async sync
   if (isOnline && SCRIPT_URL) {
     setSyncStatus('syncing');
     const op = pendingSync[key];
     if (op) {
-      let result;
-      if (op.action === 'done') {
-        result = await callScript('setDone', { key, date: op.date });
-      } else {
-        result = await callScript('setUndone', { key });
-      }
-      if (result !== null) {
-        delete pendingSync[key];
-        saveLocalState();
-        setSyncStatus('ok');
-      } else {
-        setSyncStatus('error');
-      }
+      const result = op.action === 'done'
+        ? await callScript('setDone', { key, date: op.date })
+        : await callScript('setUndone', { key });
+      if (result !== null) { delete pendingSync[key]; saveLocalState(); setSyncStatus('ok'); }
+      else setSyncStatus('error');
     }
   }
 }
 
 // =========================================================
-// SYNC STATUS UI
+// SPARKLE EFFECT
 // =========================================================
-function setSyncStatus(status) {
-  syncStatus = status;
+function fireSparkles(e) {
+  const colors = ['#B8892A','#D4A843','#E8C46A','#F5D980','#34A870','#2A8A5C'];
+  const x = e.clientX, y = e.clientY;
+  for (let i = 0; i < 14; i++) {
+    const el = document.createElement('div');
+    el.className = 'sparkle';
+    const angle = (Math.PI * 2 * i) / 14;
+    const dist = 60 + Math.random() * 60;
+    el.style.cssText = `
+      left:${x}px; top:${y}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      --dx:${Math.cos(angle)*dist}px;
+      --dy:${Math.sin(angle)*dist}px;
+      width:${6+Math.random()*8}px;
+      height:${6+Math.random()*8}px;
+      animation-delay:${Math.random()*0.15}s;
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1100);
+  }
+}
+
+// =========================================================
+// FLOATING PARTICLES
+// =========================================================
+function initParticles() {
+  const container = document.getElementById('particles');
+  const colors = ['#B8892A','#D4A843','#E8C46A','#34A870','#1A7A8A'];
+  for (let i = 0; i < 18; i++) {
+    const el = document.createElement('div');
+    el.className = 'particle';
+    const size = 3 + Math.random() * 5;
+    el.style.cssText = `
+      width:${size}px; height:${size}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      left:${Math.random()*100}%;
+      animation-duration:${15+Math.random()*25}s;
+      animation-delay:${-Math.random()*30}s;
+      --op:${0.12+Math.random()*0.2};
+    `;
+    container.appendChild(el);
+  }
+}
+
+// =========================================================
+// SYNC STATUS
+// =========================================================
+function setSyncStatus(s) {
+  syncStatus = s;
   const dot = document.getElementById('syncDot');
   const lbl = document.getElementById('syncLabel');
   if (!dot) return;
   dot.className = 'sync-dot';
   const map = {
-    syncing: ['syncing', 'جاري المزامنة...'],
-    ok:      ['active',  'متزامن مع Sheets'],
-    error:   ['error',   'خطأ في المزامنة'],
-    offline: ['',        'غير متصل'],
-    idle:    ['',        SCRIPT_URL ? 'انتظر...' : 'بدون اتصال Sheets']
+    syncing: ['syncing','جاري المزامنة...'],
+    ok:      ['active', 'متزامن ✓'],
+    error:   ['error',  'خطأ في المزامنة'],
+    offline: ['',       'غير متصل'],
+    idle:    ['',       SCRIPT_URL ? 'انتظر...' : 'محلي فقط']
   };
-  const [cls, text] = map[status] || ['', ''];
+  const [cls, text] = map[s] || ['',''];
   if (cls) dot.classList.add(cls);
   lbl.textContent = text;
 }
 
 // =========================================================
-// UPDATE UI (STATS + PROGRESS)
+// UPDATE STATS
 // =========================================================
 function updateUI() {
   const done = TL_DATA.filter((_,i) => state['tl_'+(i+1)]).length;
-  const total = TL_DATA.length; // 90
-  const remain = total - done;
+  const total = 90, remain = total - done;
   const pct = Math.round(done / total * 100);
-
-  // Stats
   animateNumber('sDone', done);
   animateNumber('sRemain', remain);
-
-  // Current week
-  const currentWeek = done > 0 ? Math.ceil(done / 7) : '—';
-  document.getElementById('sWeek').textContent = typeof currentWeek === 'number' ? currentWeek : '—';
-
-  // Streak calculation
+  const week = done > 0 ? Math.ceil(done / 7) : '—';
+  document.getElementById('sWeek').textContent = typeof week === 'number' ? week : '—';
   let streak = 0;
   for (let i = done; i >= 1; i--) {
-    if (state['tl_' + i]) streak++;
-    else break;
+    if (state['tl_' + i]) streak++; else break;
   }
   animateNumber('sStreak', streak);
-
-  // Progress bar
   const bar = document.getElementById('progBar');
   bar.style.width = pct + '%';
   bar.classList.toggle('zero', pct === 0);
@@ -1101,68 +1256,49 @@ function updateUI() {
 
 function animateNumber(id, target) {
   const el = document.getElementById(id);
-  if (!el) return;
-  const current = parseInt(el.textContent) || 0;
-  if (current === target) return;
-  const step = (target - current) / 12;
-  let val = current;
-  const timer = setInterval(() => {
+  if (!el || isNaN(target)) return;
+  const cur = parseInt(el.textContent) || 0;
+  if (cur === target) return;
+  const step = (target - cur) / 14;
+  let val = cur;
+  const t = setInterval(() => {
     val += step;
     if ((step > 0 && val >= target) || (step < 0 && val <= target)) {
-      el.textContent = target;
-      clearInterval(timer);
-    } else {
-      el.textContent = Math.round(val);
-    }
-  }, 30);
+      el.textContent = target; clearInterval(t);
+    } else { el.textContent = Math.round(val); }
+  }, 28);
 }
 
 // =========================================================
 // CARD EXPAND
 // =========================================================
 function toggleExpand(cardId, e) {
-  // Don't toggle if clicking the done button
   if (e && e.target.closest('.done-btn')) return;
   const card = document.getElementById(cardId);
   if (!card) return;
-  const wasExpanded = card.classList.contains('expanded');
-  // Close all
+  const was = card.classList.contains('expanded');
   document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove('expanded'));
-  // Open if was closed
-  if (!wasExpanded) {
+  if (!was) {
     card.classList.add('expanded');
-    // Smooth scroll into view
-    setTimeout(() => {
-      card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }, 50);
+    setTimeout(() => card.scrollIntoView({ behavior:'smooth', block:'nearest' }), 60);
   }
-}
-
-// =========================================================
-// CELEBRATION
-// =========================================================
-function celebrateCard(key) {
-  const btn = document.querySelector(`[data-key="${key}"] .done-btn`);
-  if (!btn) return;
-  btn.style.transform = 'scale(1.15)';
-  setTimeout(() => btn.style.transform = '', 300);
 }
 
 // =========================================================
 // TOAST
 // =========================================================
 function showToast(msg, type = 'info') {
-  const container = document.getElementById('toastContainer');
-  const toast = document.createElement('div');
-  toast.className = `toast ${type}`;
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
   const icons = {
     success: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>`,
-    info:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
-    warn:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`
+    info:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>`,
+    warn:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/></svg>`
   };
-  toast.innerHTML = (icons[type] || '') + msg;
-  container.appendChild(toast);
-  setTimeout(() => toast.remove(), 3000);
+  t.innerHTML = (icons[type]||'') + msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3100);
 }
 
 // =========================================================
@@ -1171,32 +1307,32 @@ function showToast(msg, type = 'info') {
 function renderCards() {
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
   const container = document.getElementById('cardsContainer');
-
-  let filtered = TL_DATA.map((item, idx) => ({ ...item, idx })).filter(item =>
-    !q ||
-    item.title.toLowerCase().includes(q) ||
+  const filtered = TL_DATA.map((item,idx) => ({...item, idx})).filter(item =>
+    !q || item.title.toLowerCase().includes(q) ||
     item.story.toLowerCase().includes(q) ||
     item.moral.toLowerCase().includes(q) ||
     item.tag.toLowerCase().includes(q)
   );
 
-  if (filtered.length === 0) {
+  if (!filtered.length) {
     container.innerHTML = `
       <div class="empty-state">
-        <div class="empty-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <div class="empty-icon" style="color:var(--ink4)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="52" height="52">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            <line x1="8" y1="11" x2="14" y2="11"/>
           </svg>
         </div>
-        <div class="empty-text">مفيش نتايج للبحث ده — جرب كلمة تانية</div>
+        <div class="empty-text">مفيش نتايج — جرب كلمة تانية</div>
       </div>`;
     return;
   }
 
-  let html = '';
-  let lastWeek = -1;
+  const tagEmojis = {
+    mindset:'🧠', communication:'💬', performance:'📈',
+    decision:'⚡', culture:'🌱', hr:'👥', motivation:'🔥'
+  };
 
+  let html = ''; let lastWeek = -1;
   filtered.forEach((item, i) => {
     const dayNum = item.idx + 1;
     const week = Math.ceil(dayNum / 7);
@@ -1206,32 +1342,21 @@ function renderCards() {
     const cardId = 'card_tl_' + dayNum;
 
     if (!q && week !== lastWeek) {
-      const weekStart = (week - 1) * 7 + 1;
-      const weekEnd = Math.min(week * 7, TL_DATA.length);
-      const weekDone = TL_DATA.slice(weekStart - 1, weekEnd).filter((_, j) => state['tl_' + (weekStart + j)]).length;
+      const ws = (week-1)*7+1, we = Math.min(week*7, 90);
+      const wDone = TL_DATA.slice(ws-1, we).filter((_,j) => state['tl_'+(ws+j)]).length;
       html += `
-      <div class="week-divider" style="animation-delay:${i * 0.02}s">
+      <div class="week-divider" style="animation-delay:${i*0.02}s">
         <div class="week-divider-line"></div>
-        <div class="week-divider-label">الأسبوع ${week} · ${weekStart}–${weekEnd} · ${weekDone}/${weekEnd - weekStart + 1}</div>
+        <div class="week-divider-label">الأسبوع ${week} · أيام ${ws}–${we} · ${wDone}/${we-ws+1} مكتمل</div>
         <div class="week-divider-line"></div>
       </div>`;
       lastWeek = week;
     }
 
-    const tagIcons = {
-      mindset:       `<svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.4 0-8-3.6-8-8s3.6-8 8-8 8 3.6 8 8-3.6 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z"/></svg>`,
-      communication: `<svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>`,
-      performance:   `<svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>`,
-      decision:      `<svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L1 21h22L12 2zm0 3.5L20.5 19h-17L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/></svg>`,
-      culture:       `<svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>`,
-      motivation:    `<svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>`,
-      hr:            `<svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`,
-    };
-
     html += `
-    <div class="card ${isDone ? 'is-done' : ''}" id="${cardId}" data-key="${key}"
+    <div class="card ${isDone?'is-done':''}" id="${cardId}" data-key="${key}"
          onclick="toggleExpand('${cardId}', event)"
-         style="animation-delay:${(i % 7) * 0.045}s">
+         style="animation-delay:${(i%7)*0.048}s">
       <div class="card-row">
         <div class="day-badge">
           <span class="d-label">TL</span>
@@ -1239,13 +1364,13 @@ function renderCards() {
         </div>
         <div class="card-body">
           <div class="card-tags">
-            <span class="tag tag-${item.tag}">${tagIcons[item.tag] || ''} ${item.tag}</span>
-            ${isDone ? '<span class="tag" style="background:var(--emerald-dim);color:var(--emerald);border:0.5px solid rgba(52,211,153,0.2)">✓ مكتمل</span>' : ''}
+            <span class="tag tag-${item.tag}">${tagEmojis[item.tag]||''} ${item.tag}</span>
+            ${isDone?'<span class="tag" style="background:var(--emerald-dim);color:var(--emerald);border:1px solid rgba(42,138,92,0.2)">✓ مكتمل</span>':''}
           </div>
           <div class="card-title">${item.title}</div>
         </div>
         <div class="card-chevron">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
             <polyline points="6 9 12 15 18 9"/>
           </svg>
         </div>
@@ -1254,7 +1379,6 @@ function renderCards() {
       <div class="card-content">
         <div class="card-inner">
           <p class="story-text">${item.story}</p>
-
           <div class="moral-block">
             <svg class="moral-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M9 11l3 3L22 4"/>
@@ -1262,37 +1386,31 @@ function renderCards() {
             </svg>
             <p class="moral-text">${item.moral}</p>
           </div>
-
-          ${item.goal ? `
+          ${item.goal?`
           <div class="goal-block">
             <svg class="goal-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <circle cx="12" cy="12" r="6"/>
-              <circle cx="12" cy="12" r="2"/>
+              <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
             </svg>
             <p class="goal-text">${item.goal}</p>
-          </div>` : ''}
-
+          </div>`:''}
           <div class="card-footer">
-            <button class="done-btn ${isDone ? 'is-marked' : ''}"
+            <button class="done-btn ${isDone?'is-marked':''}"
                     onclick="toggleItem(${dayNum}, event)">
               <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
                 ${isDone
                   ? '<polyline points="20 6 9 17 4 12"/>'
                   : '<circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/>'}
               </svg>
-              ${isDone ? 'مكتمل' : 'تحديد كمكتمل'}
+              ${isDone ? '✓ مكتمل' : 'تحديد كمكتمل'}
             </button>
-            ${dateStr ? `
+            ${dateStr?`
             <div class="done-date">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-                <line x1="16" y1="2" x2="16" y2="6"/>
-                <line x1="8" y1="2" x2="8" y2="6"/>
-                <line x1="3" y1="10" x2="21" y2="10"/>
+                <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/>
+                <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
               </svg>
               ${dateStr}
-            </div>` : ''}
+            </div>`:''}
           </div>
         </div>
       </div>
@@ -1303,53 +1421,48 @@ function renderCards() {
 }
 
 // =========================================================
-// SCROLL TO TOP
+// SCROLL
 // =========================================================
 window.addEventListener('scroll', () => {
-  const btn = document.getElementById('scrollTop');
-  btn.classList.toggle('show', window.scrollY > 400);
+  document.getElementById('scrollTop').classList.toggle('show', window.scrollY > 400);
 });
 
 // =========================================================
-// ONLINE / OFFLINE
+// ONLINE/OFFLINE
 // =========================================================
 window.addEventListener('online', () => {
   isOnline = true;
   document.getElementById('offlineBanner').classList.remove('show');
   syncPendingToServer();
-  showToast('اتصال الإنترنت عاد — جاري المزامنة', 'info');
+  showToast('الاتصال عاد — جاري المزامنة', 'info');
 });
 window.addEventListener('offline', () => {
   isOnline = false;
   document.getElementById('offlineBanner').classList.add('show');
   setSyncStatus('offline');
-  showToast('لا يوجد اتصال — التغييرات محفوظة محلياً', 'warn');
+  showToast('لا يوجد اتصال — محفوظ محلياً', 'warn');
 });
 
 // =========================================================
 // INIT
 // =========================================================
 async function init() {
-  // Set date
   const d = new Date();
   document.getElementById('todayLabel').textContent =
-    d.toLocaleDateString('ar-EG', { weekday: 'short', day: 'numeric', month: 'long' });
+    d.toLocaleDateString('ar-EG', { weekday:'short', day:'numeric', month:'long' });
 
-  // Load local state immediately
+  initParticles();
   loadLocalState();
   updateUI();
   renderCards();
 
-  // Set initial sync status
   if (!SCRIPT_URL) {
     setSyncStatus('idle');
   } else if (!isOnline) {
     setSyncStatus('offline');
     document.getElementById('offlineBanner').classList.add('show');
   } else {
-    // Sync from server (server is source of truth)
     await syncFromServer();
-    // Then push any pending local changes
     await syncPendingToServer();
     updateUI();
     renderCards();
