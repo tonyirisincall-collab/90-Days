@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>90-Day Leadership Tracker</title>
+
+<!-- FAVICON (Eye of Horus SVG) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cdefs%3E%3CradialGradient id='fg' cx='50%25' cy='40%25' r='50%25'%3E%3Cstop offset='0%25' stop-color='%23F5D980'/%3E%3Cstop offset='100%25' stop-color='%23B8892A'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='16' cy='16' r='15' fill='%23F5F0E8' stroke='%23B8892A' stroke-width='2'/%3E%3Cpath d='M5 16 Q16 5 27 16 Q16 27 5 16' fill='none' stroke='%23B8892A' stroke-width='2'/%3E%3Ccircle cx='16' cy='16' r='7' fill='url(%23fg)'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%232A2318'/%3E%3Ccircle cx='18' cy='14' r='1.2' fill='white' opacity='0.6'/%3E%3Cpath d='M5 16 Q1 18 2 22' stroke='%23B8892A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3Cline x1='23' y1='9' x2='26' y2='6' stroke='%23B8892A' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='26' y1='11' x2='29' y2='9' stroke='%23B8892A' stroke-width='1.2' stroke-linecap='round'/%3E%3C/svg%3E">
+
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;900&family=Cinzel:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 /* =========================================================
@@ -276,7 +280,14 @@ body {
 }
 @keyframes shimmer { 0%{left:-100%} 30%{left:150%} 100%{left:150%} }
 
-.stat-icon { font-size: 20px; margin-bottom: 6px; display: block; }
+.stat-icon {
+  display: block; width: 26px; height: 26px;
+  margin: 0 auto 8px;
+}
+.stat-icon svg {
+  width: 100%; height: 100%; display: block;
+}
+
 .stat-n {
   font-size: 32px; font-weight: 900; line-height: 1;
   font-variant-numeric: tabular-nums;
@@ -549,7 +560,9 @@ body {
   border-radius: 20px; letter-spacing: 0.5px;
   text-transform: uppercase; white-space: nowrap;
   transition: transform 0.2s;
+  display: inline-flex; align-items: center; gap: 3px;
 }
+.tag svg { flex-shrink: 0; }
 .tag:hover { transform: scale(1.05); }
 .tag-mindset       { background:var(--gold-dim);    color:var(--gold);    border:1px solid rgba(184,137,42,0.2); }
 .tag-communication { background:var(--teal-dim);    color:var(--teal);    border:1px solid rgba(26,122,138,0.2); }
@@ -754,8 +767,10 @@ body {
   padding: 10px 18px; margin-bottom: 1rem;
   font-size: 12px; color: var(--coral);
   text-align: center; animation: fadeUp 0.3s ease;
+  align-items: center; justify-content: center; gap: 6px;
 }
-.offline-banner.show { display: block; }
+.offline-banner.show { display: flex; }
+.offline-banner svg { width: 14px; height: 14px; flex-shrink: 0; color: var(--coral); }
 
 /* =========================================================
    FLOATING PARTICLES (decorative)
@@ -803,7 +818,10 @@ body {
 
   <!-- OFFLINE BANNER -->
   <div class="offline-banner" id="offlineBanner">
-    ⚡ تشتغل offline — التغييرات محفوظة محلياً وهتتزامن لما الاتصال يرجع
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="13 2 3 14 9 14 6 22 17 10 11 10 13 2"/>
+    </svg>
+    تشتغل offline — التغييرات محفوظة محلياً وهتتزامن لما الاتصال يرجع
   </div>
 
   <!-- HEADER -->
@@ -883,22 +901,58 @@ body {
   <!-- STATS -->
   <div class="stats">
     <div class="stat gold">
-      <span class="stat-icon">👑</span>
+      <span class="stat-icon">
+        <!-- Crown SVG -->
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M3 18 L5 8 L9 12 L12 5 L15 12 L19 8 L21 18 Z" stroke="#B8892A" stroke-width="1.8" stroke-linejoin="round" fill="rgba(184,137,42,0.12)"/>
+          <circle cx="5" cy="8" r="1.6" fill="#D4A843"/>
+          <circle cx="12" cy="5" r="1.6" fill="#D4A843"/>
+          <circle cx="19" cy="8" r="1.6" fill="#D4A843"/>
+          <path d="M7 18 L9 14 L12 16 L15 14 L17 18" stroke="#B8892A" stroke-width="1.2" fill="none" stroke-linejoin="round"/>
+        </svg>
+      </span>
       <div class="stat-n" id="sDone">0</div>
       <div class="stat-l">يوم مكتمل</div>
     </div>
     <div class="stat teal">
-      <span class="stat-icon">🎯</span>
+      <span class="stat-icon">
+        <!-- Target SVG -->
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="12" cy="12" r="10" stroke="#1A7A8A" stroke-width="1.8"/>
+          <circle cx="12" cy="12" r="6" stroke="#1A7A8A" stroke-width="1.8"/>
+          <circle cx="12" cy="12" r="2.2" fill="#2A9AAE" stroke="#1A7A8A" stroke-width="1"/>
+          <line x1="12" y1="2" x2="12" y2="5" stroke="#1A7A8A" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="12" y1="19" x2="12" y2="22" stroke="#1A7A8A" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="2" y1="12" x2="5" y2="12" stroke="#1A7A8A" stroke-width="1.4" stroke-linecap="round"/>
+          <line x1="19" y1="12" x2="22" y2="12" stroke="#1A7A8A" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </span>
       <div class="stat-n" id="sRemain">90</div>
       <div class="stat-l">يوم متبقي</div>
     </div>
     <div class="stat violet">
-      <span class="stat-icon">📅</span>
+      <span class="stat-icon">
+        <!-- Calendar SVG -->
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="2.5" y="4" width="19" height="18" rx="2.5" stroke="#7B5EA7" stroke-width="1.8"/>
+          <line x1="2.5" y1="9.5" x2="21.5" y2="9.5" stroke="#7B5EA7" stroke-width="1.6"/>
+          <line x1="7.5" y1="2" x2="7.5" y2="6" stroke="#7B5EA7" stroke-width="1.8" stroke-linecap="round"/>
+          <line x1="16.5" y1="2" x2="16.5" y2="6" stroke="#7B5EA7" stroke-width="1.8" stroke-linecap="round"/>
+          <rect x="6" y="12" width="3" height="3" rx="1" fill="#A07FD0" opacity="0.6"/>
+          <rect x="11" y="12" width="3" height="3" rx="1" fill="#A07FD0" opacity="0.6"/>
+        </svg>
+      </span>
       <div class="stat-n" id="sWeek">—</div>
       <div class="stat-l">الأسبوع الحالي</div>
     </div>
     <div class="stat emerald">
-      <span class="stat-icon">🔥</span>
+      <span class="stat-icon">
+        <!-- Flame SVG -->
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 22 C7 18 5.5 14 5.5 10.5 C5.5 6 9 3 12 1.5 C13.5 4 15 5.5 16.5 7.5 C18.5 10 18.5 14.5 14 18 C15 19.5 16 21 12 22 Z" stroke="#2A8A5C" stroke-width="1.8" stroke-linejoin="round" fill="rgba(42,138,92,0.12)"/>
+          <path d="M10 14 C9 12 9.5 10.5 11 9 C11.5 10 11.5 11 11 12.5 C11.5 11.5 12 10.5 13 9.5 C13 11 12.5 13 11.5 15" stroke="#2A8A5C" stroke-width="1.3" fill="none" stroke-linejoin="round" opacity="0.6"/>
+        </svg>
+      </span>
       <div class="stat-n" id="sStreak">0</div>
       <div class="stat-l">streak متتالي</div>
     </div>
@@ -1307,6 +1361,18 @@ function showToast(msg, type = 'info') {
 function renderCards() {
   const q = document.getElementById('searchInput').value.trim().toLowerCase();
   const container = document.getElementById('cardsContainer');
+
+  // SVG icon strings for tags (used via currentColor to inherit tag color)
+  const tagIcons = {
+    mindset:       `<svg width="10" height="10" viewBox="0 0 16 16" fill="none"><path d="M8 1 L14 8 L8 15 L2 8 Z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="8" cy="8" r="2.5" fill="currentColor" opacity="0.6"/></svg>`,
+    communication: `<svg width="10" height="10" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="2.5" width="11" height="9" rx="2.5" stroke="currentColor" stroke-width="1.6"/><path d="M4.5 11.5 L4.5 14 L8 11.5" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" fill="none"/></svg>`,
+    performance:   `<svg width="10" height="10" viewBox="0 0 16 16" fill="none"><rect x="1.5" y="9" width="3.5" height="5" rx="0.8" fill="currentColor" opacity="0.7"/><rect x="6.5" y="5" width="3.5" height="9" rx="0.8" fill="currentColor" opacity="0.85"/><rect x="11.5" y="2" width="3.5" height="12" rx="0.8" fill="currentColor"/></svg>`,
+    decision:      `<svg width="10" height="10" viewBox="0 0 16 16" fill="none"><polygon points="9.5,1 3,9.5 7.5,9.5 5.5,15 12.5,6 8,6" fill="currentColor" stroke="currentColor" stroke-width="0.8" stroke-linejoin="round"/></svg>`,
+    culture:       `<svg width="10" height="10" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.6"/><path d="M8 2 Q5 5 5 8 Q5 11 8 14 Q11 11 11 8 Q11 5 8 2" fill="currentColor" opacity="0.35"/><circle cx="8" cy="8" r="1.5" fill="currentColor"/></svg>`,
+    hr:            `<svg width="10" height="10" viewBox="0 0 16 16" fill="none"><circle cx="5" cy="3.5" r="2.2" stroke="currentColor" stroke-width="1.5"/><path d="M1 13 Q1 9 5 9 Q9 9 9 13" stroke="currentColor" stroke-width="1.5" fill="none"/><circle cx="11" cy="3.5" r="1.8" stroke="currentColor" stroke-width="1.5"/><path d="M8 13 Q8 10 11 10 Q14 10 14 13" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>`,
+    motivation:    `<svg width="10" height="10" viewBox="0 0 16 16" fill="none"><polygon points="8,1 9.8,5.8 15,6.2 11,9.7 12.1,14.8 8,12.2 3.9,14.8 5,9.7 1,6.2 6.2,5.8" stroke="currentColor" stroke-width="1.4" fill="currentColor" opacity="0.5"/></svg>`
+  };
+
   const filtered = TL_DATA.map((item,idx) => ({...item, idx})).filter(item =>
     !q || item.title.toLowerCase().includes(q) ||
     item.story.toLowerCase().includes(q) ||
@@ -1326,11 +1392,6 @@ function renderCards() {
       </div>`;
     return;
   }
-
-  const tagEmojis = {
-    mindset:'🧠', communication:'💬', performance:'📈',
-    decision:'⚡', culture:'🌱', hr:'👥', motivation:'🔥'
-  };
 
   let html = ''; let lastWeek = -1;
   filtered.forEach((item, i) => {
@@ -1364,7 +1425,7 @@ function renderCards() {
         </div>
         <div class="card-body">
           <div class="card-tags">
-            <span class="tag tag-${item.tag}">${tagEmojis[item.tag]||''} ${item.tag}</span>
+            <span class="tag tag-${item.tag}">${tagIcons[item.tag]||''} ${item.tag}</span>
             ${isDone?'<span class="tag" style="background:var(--emerald-dim);color:var(--emerald);border:1px solid rgba(42,138,92,0.2)">✓ مكتمل</span>':''}
           </div>
           <div class="card-title">${item.title}</div>
